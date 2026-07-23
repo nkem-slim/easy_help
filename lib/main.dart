@@ -32,7 +32,7 @@ class EasyHelpApp extends StatelessWidget {
         title: 'Easy Help',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
-        initialRoute: AppRoutes.onboarding,
+        initialRoute: AppRoutes.splash,
         onGenerateRoute: AppRouter.onGenerateRoute,
       ),
     );
