@@ -68,6 +68,10 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () => Navigator.of(context).pushNamed(AppRoutes.signup),
                     child: const Text("Don't have an account? Join us"),
                   ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pushReplacementNamed(AppRoutes.home),
+                    child: const Text('Skip for now'),
+                  ),
                 ],
               ),
             ),

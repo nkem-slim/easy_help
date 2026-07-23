@@ -14,7 +14,7 @@ Future<void> main() async {
 
   // TODO: uncomment once `flutterfire configure` has generated firebase_options.dart
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 
   await di.initDependencies();
 

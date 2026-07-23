@@ -3,7 +3,7 @@ import '../constants/app_strings.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
 import '../../features/auth/presentation/pages/signup_page.dart';
-import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/home/presentation/pages/main_shell.dart';
 
 class AppRouter {
   AppRouter._();
@@ -17,7 +17,7 @@ class AppRouter {
       case AppRoutes.signup:
         return MaterialPageRoute(builder: (_) => const SignupPage());
       case AppRoutes.home:
-        return MaterialPageRoute(builder: (_) => const HomePage());
+        return MaterialPageRoute(builder: (_) => const MainShell());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
