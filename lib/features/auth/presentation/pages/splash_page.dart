@@ -30,13 +30,13 @@ class _SplashPageState extends State<SplashPage> {
           Positioned(
             top: -60,
             left: -60,
-            child: _Blob(size: 200, color: AppColors.primary.withOpacity(0.08)),
+            child: _Blob(size: 200, color: AppColors.primary.withValues(alpha: 0.08)),
           ),
           // Bottom-right blob
           Positioned(
             bottom: -60,
             right: -60,
-            child: _Blob(size: 220, color: AppColors.primary.withOpacity(0.08)),
+            child: _Blob(size: 220, color: AppColors.primary.withValues(alpha: 0.08)),
           ),
           // Center content
           Center(
