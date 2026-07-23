@@ -10,12 +10,8 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Easy Help'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => context.read<AuthBloc>().add(const AuthLogoutRequested()),
-          ),
-        ],
+        actions: [],
+        automaticallyImplyLeading: false, // this removes the back button
       ),
       body: const Center(child: Text('Home dashboard — TODO')),
     );

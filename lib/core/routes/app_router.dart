@@ -3,6 +3,7 @@ import '../constants/app_strings.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
 import '../../features/auth/presentation/pages/signup_page.dart';
+import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/home/presentation/pages/main_shell.dart';
 
 class AppRouter {
@@ -10,6 +11,8 @@ class AppRouter {
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case AppRoutes.splash:
+        return MaterialPageRoute(builder: (_) => const SplashPage());
       case AppRoutes.onboarding:
         return MaterialPageRoute(builder: (_) => const OnboardingPage());
       case AppRoutes.login:
