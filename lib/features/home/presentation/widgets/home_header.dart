@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_strings.dart';
 
 class HomeHeader extends StatelessWidget {
   final String userName;
@@ -33,25 +34,29 @@ class HomeHeader extends StatelessWidget {
               Text(
                 'Hi $userName',
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
+                  color: Colors.white70,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 4),
               const Text(
                 'Hope you are well',
                 style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 14,
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          const CircleAvatar(
-            radius: 26,
-            backgroundColor: Colors.white24,
-            backgroundImage: AssetImage('assets/images/human-image.jpg'),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pushNamed(AppRoutes.profile),
+            child: const CircleAvatar(
+              radius: 26,
+              backgroundColor: Colors.white24,
+              backgroundImage: AssetImage('assets/images/human-image.jpg'),
+            ),
           ),
         ],
       ),
