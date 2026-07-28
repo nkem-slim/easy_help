@@ -5,6 +5,7 @@ import '../../features/auth/presentation/pages/onboarding_page.dart';
 import '../../features/auth/presentation/pages/signup_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/home/presentation/pages/main_shell.dart';
+import '../../features/profile/presentation/pages/privacy_policy_page.dart';
 
 class AppRouter {
   AppRouter._();
@@ -21,6 +22,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const SignupPage());
       case AppRoutes.home:
         return MaterialPageRoute(builder: (_) => const MainShell());
+      case AppRoutes.privacyPolicy:
+        return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
