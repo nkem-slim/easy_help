@@ -51,7 +51,7 @@ class HomeHeader extends StatelessWidget {
           const CircleAvatar(
             radius: 26,
             backgroundColor: Colors.white24,
-            child: Icon(Icons.person_rounded, color: Colors.white, size: 28),
+            backgroundImage: AssetImage('assets/images/human-image.jpg'),
           ),
         ],
       ),

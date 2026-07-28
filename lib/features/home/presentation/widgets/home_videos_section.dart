@@ -96,7 +96,7 @@ class _VideoCard extends StatelessWidget {
             const Center(
               child: CircleAvatar(
                 radius: 22,
-                backgroundColor: Colors.white24,
+                backgroundColor: Colors.black45,
                 child: Icon(
                   Icons.play_arrow_rounded,
                   color: Colors.white,
