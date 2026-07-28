@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,9 +11,9 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // TODO: uncomment once `flutterfire configure` has generated firebase_options.dart
+  // TODO: once `flutterfire configure` has generated firebase_options.dart,
+  // re-add `import 'package:firebase_core/firebase_core.dart';` and uncomment:
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // await Firebase.initializeApp();
 
   await di.initDependencies();
 
