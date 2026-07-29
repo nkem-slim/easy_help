@@ -9,6 +9,8 @@ import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/appointments/presentation/pages/appointment_confirmation.dart';
 import '../../features/appointments/presentation/pages/book_appointment.dart';
 import '../../features/appointments/domain/entities/appointment_entity.dart';
+import '../../features/appointments/presentation/pages/appointment_for.dart';
+import '../../features/appointments/presentation/pages/doctor_details.dart';
 
 class AppRouter {
   AppRouter._();
@@ -28,6 +30,30 @@ class AppRouter {
       case AppRoutes.profile:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
 
+      case AppRoutes.doctorDetails:
+        final args = settings.arguments as Map<String, String>;
+        return MaterialPageRoute(
+          builder: (_) => DoctorDetailsPage(
+            doctorId: args['doctorId']!,
+            doctorName: args['doctorName']!,
+            doctorSpecialty: args['doctorSpecialty']!,
+            doctorImageUrl: args['doctorImageUrl']!,
+            patientId: args['patientId']!,
+          ),
+        );
+
+      case AppRoutes.appointmentFor:
+        final args = settings.arguments as Map<String, String>;
+        return MaterialPageRoute(
+          builder: (_) => AppointmentForPage(
+            doctorId: args['doctorId']!,
+            doctorName: args['doctorName']!,
+            doctorSpecialty: args['doctorSpecialty']!,
+            doctorImageUrl: args['doctorImageUrl']!,
+            patientId: args['patientId']!,
+          ),
+        );
+
       case AppRoutes.bookAppointment:
         final args = settings.arguments as Map<String, String>;
         return MaterialPageRoute(
@@ -37,21 +63,23 @@ class AppRouter {
             doctorSpecialty: args['doctorSpecialty']!,
             doctorImageUrl: args['doctorImageUrl']!,
             patientId: args['patientId']!,
+            patientName: args['patientName']!,
+            contactNumber: args['contactNumber']!,
+            relationship: args['relationship']!,
           ),
         );
 
-       case AppRoutes.appointmentConfirmation:
+      case AppRoutes.appointmentConfirmation:
         final appointment = settings.arguments as AppointmentEntity;
         return MaterialPageRoute(
           builder: (_) => AppointmentConfirmationPage(appointment: appointment),
-        ); 
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
             body: Center(child: Text('No route defined for ${settings.name}')),
           ),
         );
-        
     }
   }
 }

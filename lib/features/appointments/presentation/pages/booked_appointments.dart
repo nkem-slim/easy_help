@@ -22,10 +22,23 @@ class _BookedAppointmentsPageState extends State<BookedAppointmentsPage> {
     );
   }
 
+  void _startBooking(BuildContext context) {
+    Navigator.of(context).pushNamed(
+      AppRoutes.doctorDetails,
+      arguments: {
+        'doctorId': '2206489',
+        'doctorName': 'Dr. Nshuti',
+        'doctorSpecialty': 'Pediatrician',
+        'doctorImageUrl': 'https://i.pravatar.cc/150?img=12',
+        'patientId': widget.patientId,
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My Appointments')),
+      appBar: AppBar(title: const Text('My Booked Appointments')),
       body: BlocBuilder<AppointmentBloc, AppointmentState>(
         builder: (context, state) {
           if (state is AppointmentLoading) {
@@ -36,10 +49,10 @@ class _BookedAppointmentsPageState extends State<BookedAppointmentsPage> {
           }
           if (state is AppointmentLoaded) {
             if (state.appointments.isEmpty) {
-              return _EmptyState(patientId: widget.patientId);
+              return _EmptyState(onBookNow: () => _startBooking(context));
             }
             return ListView.separated(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
               itemCount: state.appointments.length,
               separatorBuilder: (_, __) => const SizedBox(height: 12),
               itemBuilder: (context, index) =>
@@ -49,13 +62,20 @@ class _BookedAppointmentsPageState extends State<BookedAppointmentsPage> {
           return const SizedBox.shrink();
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _startBooking(context),
+        backgroundColor: AppColors.primary,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add_rounded, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
 
 class _EmptyState extends StatelessWidget {
-  final String patientId;
-  const _EmptyState({required this.patientId});
+  final VoidCallback onBookNow;
+  const _EmptyState({required this.onBookNow});
 
   @override
   Widget build(BuildContext context) {
@@ -82,25 +102,7 @@ class _EmptyState extends StatelessWidget {
               style: TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(
-                    AppRoutes.bookAppointment,
-                    arguments: {
-                      'doctorId': '',
-                      'doctorName': '',
-                      'doctorSpecialty': '',
-                      'doctorImageUrl': '',
-                      'patientId': patientId,
-                    },
-                  );
-                },
-                child: const Text('Book Now'),
-              ),
-            ),
+            ElevatedButton(onPressed: onBookNow, child: const Text('Book Now')),
           ],
         ),
       ),
