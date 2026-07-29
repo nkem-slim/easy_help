@@ -48,10 +48,10 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
   }
 
   @override
-  Future<Either<Failure, void>> cancelAppointment(AppointmentEntity appointment) async {
+  Future<Either<Failure, void>> cancelAppointment(String appointmentId) async {
     if (!await networkInfo.isConnected) return const Left(NetworkFailure());
     try {
-      await remoteDataSource.cancelAppointment(appointment);
+      await remoteDataSource.cancelAppointment(appointmentId);
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));

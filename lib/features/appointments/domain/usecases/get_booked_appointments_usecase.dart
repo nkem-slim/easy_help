@@ -6,7 +6,7 @@ import '../entities/appointment_entity.dart';
 import '../repositories/appointment_repository.dart';
 
 class GetBookedAppointmentsUsecase
-    implements UseCase<List<AppointmentEntity>, GetBookedAppointmentsUsecase> {
+    implements UseCase<List<AppointmentEntity>, GetBookedAppointmentsParams> {
   final AppointmentRepository repository;
 
   GetBookedAppointmentsUsecase(this.repository);
