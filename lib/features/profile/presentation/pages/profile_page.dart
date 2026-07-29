@@ -62,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             ProfileHeader(
               name: 'Mommy Uwineza',
-              // TODO: pass 'assets/images/<photo>.png' once the avatar is added.
+              imagePath: 'assets/images/human-image.jpg',
               onCameraTap: () => _comingSoon('Change photo'),
             ),
 
@@ -94,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 icon: Icons.edit_rounded,
                 color: AppColors.badgeBlue,
               ),
-              onTap: () => _comingSoon('Edit Profile'),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.userDetails),
             ),
             const Divider(height: 1, color: AppColors.divider, indent: 20, endIndent: 20),
             ProfileTile(

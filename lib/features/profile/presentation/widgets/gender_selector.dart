@@ -80,7 +80,7 @@ class _Option extends StatelessWidget {
             gender.label,
             style: const TextStyle(
               fontSize: 15,
-              color: AppColors.textPrimary,
+              color: AppColors.textSecondary,
             ),
           ),
         ],
