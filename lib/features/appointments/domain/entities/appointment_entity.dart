@@ -7,6 +7,9 @@ class AppointmentEntity extends Equatable {
   final String doctorName;
   final String doctorSpecialty;
   final String doctorImageUrl;
+  final String patientName;
+  final String contactNumber;
+  final String relationship;
   final DateTime date;
   final String timeSlot;
   final int reminderMinutesBefore;
@@ -19,6 +22,9 @@ class AppointmentEntity extends Equatable {
     required this.doctorName,
     required this.doctorSpecialty,
     required this.doctorImageUrl,
+    required this.patientName,
+    required this.contactNumber,
+    required this.relationship,
     required this.date,
     required this.timeSlot,
     required this.reminderMinutesBefore,
@@ -33,6 +39,9 @@ class AppointmentEntity extends Equatable {
     doctorName,
     doctorSpecialty,
     doctorImageUrl,
+    patientName,
+    contactNumber,
+    relationship,
     date,
     timeSlot,
     reminderMinutesBefore,
