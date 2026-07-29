@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../widgets/page_back_button.dart';
 import '../widgets/policy_bullet.dart';
 import '../widgets/soft_gradient_background.dart';
 
-/// TODO: have this copy reviewed before release — it is a plain-language draft,
-/// not legally vetted text.
+/// TODO: have this copy reviewed before release
+
 class PrivacyPolicyPage extends StatelessWidget {
   const PrivacyPolicyPage({super.key});
 
@@ -49,11 +50,11 @@ class PrivacyPolicyPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  const Row(
                     children: [
-                      _BackButton(onTap: () => Navigator.pop(context)),
-                      const SizedBox(width: 16),
-                      const Text(
+                      PageBackButton(),
+                      SizedBox(width: 16),
+                      Text(
                         'Privacy policy',
                         style: TextStyle(
                           fontSize: 20,
@@ -83,40 +84,6 @@ class PrivacyPolicyPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// White rounded square holding a back chevron.
-class _BackButton extends StatelessWidget {
-  final VoidCallback onTap;
-
-  const _BackButton({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x14000000),
-              blurRadius: 8,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const Icon(
-          Icons.chevron_left_rounded,
-          color: AppColors.textPrimary,
-        ),
       ),
     );
   }

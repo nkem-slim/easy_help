@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
 
+const List<String> _defaultDoctorServices = [
+  'Patient care should be the number one priority.',
+  'Focused mainly on children with early signs of ASD.',
+  "That's why you matter to us.",
+];
+
 class DoctorItem {
   final String name;
   final String specialty;
@@ -13,6 +19,14 @@ class DoctorItem {
   final String location;
   final String imageAsset;
   final bool isFavorite;
+  final double starRating;
+  final bool hasInsurance;
+  final int runningCount;
+  final int ongoingCount;
+  final int patientCount;
+  final List<String> services;
+  final double clinicLat;
+  final double clinicLng;
 
   const DoctorItem({
     required this.name,
@@ -25,23 +39,37 @@ class DoctorItem {
     required this.location,
     required this.imageAsset,
     this.isFavorite = false,
+    this.starRating = 4.0,
+    this.hasInsurance = true,
+    this.runningCount = 100,
+    this.ongoingCount = 500,
+    this.patientCount = 700,
+    this.services = _defaultDoctorServices,
+    this.clinicLat = -1.9441,
+    this.clinicLng = 30.0619,
   });
 }
 
 class DoctorCard extends StatelessWidget {
   final DoctorItem item;
+  final VoidCallback? onTap;
   final VoidCallback? onBookNow;
   final VoidCallback? onFavoriteToggle;
 
   const DoctorCard({
     super.key,
     required this.item,
+    this.onTap,
     this.onBookNow,
     this.onFavoriteToggle,
   });
 
   @override
   Widget build(BuildContext context) {
+    return GestureDetector(onTap: onTap, child: _buildCard());
+  }
+
+  Widget _buildCard() {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(

@@ -6,12 +6,14 @@ import '../../features/auth/presentation/pages/signup_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/home/presentation/pages/main_shell.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/profile/presentation/pages/privacy_policy_page.dart';
 import '../../features/appointments/presentation/pages/appointment_confirmation.dart';
 import '../../features/appointments/presentation/pages/book_appointment.dart';
 import '../../features/appointments/domain/entities/appointment_entity.dart';
 import '../../features/appointments/presentation/pages/appointment_for.dart';
-import '../../features/appointments/presentation/pages/doctor_details.dart';
+import '../../features/support/presentation/pages/doctor_details_page.dart';
 import '../../features/support/presentation/pages/find_clinic_page.dart';
+import '../../features/support/presentation/widgets/doctor_card.dart';
 
 class AppRouter {
   AppRouter._();
@@ -30,16 +32,28 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const MainShell());
       case AppRoutes.profile:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
+      case AppRoutes.privacyPolicy:
+        return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
 
       case AppRoutes.doctorDetails:
         final args = settings.arguments as Map<String, String>;
         return MaterialPageRoute(
-          builder: (_) => DoctorDetailsPage(
-            doctorId: args['doctorId']!,
-            doctorName: args['doctorName']!,
-            doctorSpecialty: args['doctorSpecialty']!,
-            doctorImageUrl: args['doctorImageUrl']!,
-            patientId: args['patientId']!,
+          builder: (routeContext) => DoctorDetailsPage(
+            doctor: DoctorItem(
+              name: args['doctorName']!,
+              specialty: args['doctorSpecialty']!,
+              experience: '5+ Years experience',
+              ratingPercent: '90%',
+              patientStories: '50 Patient Stories',
+              clinicName: 'Easy Help Clinic',
+              availability: 'By Appointment',
+              location: 'Kigali',
+              imageAsset: 'assets/images/clinic-1.jpg',
+            ),
+            onBookNow: () => Navigator.of(routeContext).pushNamed(
+              AppRoutes.appointmentFor,
+              arguments: args,
+            ),
           ),
         );
 
