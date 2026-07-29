@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
-import '../../../appointments/presentation/pages/appointments_page.dart';
+import '../../../appointments/presentation/pages/booked_appointments.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../favorites/presentation/pages/favorites_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import 'home_page.dart';
@@ -16,22 +18,21 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomePage(),
-    FavouriteClinicsPage(),
-    AppointmentsPage(),
-    ProfilePage(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
+    final authState = context.watch<AuthBloc>().state;
+    final patientId = authState is AuthAuthenticated ? authState.user.id : '';
+
+    final pages = [
+      const HomePage(),
+      const FavouriteClinicsPage(),
+      BookedAppointmentsPage(patientId: patientId),
+      const ProfilePage(),
+    ];
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _currentIndex, children: pages),
       bottomNavigationBar: StylishBottomBar(
         option: BubbleBarOptions(
           bubbleFillStyle: BubbleFillStyle.fill,
