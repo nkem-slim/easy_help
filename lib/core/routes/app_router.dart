@@ -6,6 +6,9 @@ import '../../features/auth/presentation/pages/signup_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/home/presentation/pages/main_shell.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/appointments/presentation/pages/appointment_confirmation.dart';
+import '../../features/appointments/presentation/pages/book_appointment.dart';
+import '../../features/appointments/domain/entities/appointment_entity.dart';
 
 class AppRouter {
   AppRouter._();
@@ -24,12 +27,31 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const MainShell());
       case AppRoutes.profile:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
+
+      case AppRoutes.bookAppointment:
+        final args = settings.arguments as Map<String, String>;
+        return MaterialPageRoute(
+          builder: (_) => BookAppointmentPage(
+            doctorId: args['doctorId']!,
+            doctorName: args['doctorName']!,
+            doctorSpecialty: args['doctorSpecialty']!,
+            doctorImageUrl: args['doctorImageUrl']!,
+            patientId: args['patientId']!,
+          ),
+        );
+
+       case AppRoutes.appointmentConfirmation:
+        final appointment = settings.arguments as AppointmentEntity;
+        return MaterialPageRoute(
+          builder: (_) => AppointmentConfirmationPage(appointment: appointment),
+        ); 
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
             body: Center(child: Text('No route defined for ${settings.name}')),
           ),
         );
+        
     }
   }
 }
