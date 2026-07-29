@@ -11,6 +11,7 @@ import '../../features/appointments/presentation/pages/book_appointment.dart';
 import '../../features/appointments/domain/entities/appointment_entity.dart';
 import '../../features/appointments/presentation/pages/appointment_for.dart';
 import '../../features/appointments/presentation/pages/doctor_details.dart';
+import '../../features/support/presentation/pages/find_clinic_page.dart';
 
 class AppRouter {
   AppRouter._();
@@ -74,6 +75,8 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => AppointmentConfirmationPage(appointment: appointment),
         );
+      case AppRoutes.findClinic:
+        return MaterialPageRoute(builder: (_) => const FindClinicPage());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
