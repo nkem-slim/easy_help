@@ -49,3 +49,8 @@ android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 firebase-debug.log
 .firebase/
+
+# Secrets
+.env
+android/local.properties
+ios/Flutter/Secrets.xcconfig

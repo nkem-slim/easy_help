@@ -46,6 +46,12 @@ dependencies:
   # Maps (Doctor Details clinic location preview)
   google_maps_flutter: ^2.9.0
 
+  # Environment variables / secrets
+  flutter_dotenv: ^5.2.1
+
+  # Web-only script injection for the Google Maps JS API
+  web: ^1.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -58,3 +64,4 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - .env
