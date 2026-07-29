@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../widgets/doctor_card.dart';
 import '../widgets/find_clinic_header.dart';
 import '../widgets/find_clinic_search_bar.dart';
+import 'doctor_details_page.dart';
 
 class FindClinicPage extends StatefulWidget {
   const FindClinicPage({super.key});
@@ -90,8 +91,22 @@ class _FindClinicPageState extends State<FindClinicPage> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 itemCount: _filteredDoctors.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 14),
-                itemBuilder: (context, index) =>
-                    DoctorCard(item: _filteredDoctors[index]),
+                itemBuilder: (context, index) {
+                  final doctor = _filteredDoctors[index];
+                  void openDetails() {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => DoctorDetailsPage(doctor: doctor),
+                      ),
+                    );
+                  }
+
+                  return DoctorCard(
+                    item: doctor,
+                    onTap: openDetails,
+                    onBookNow: openDetails,
+                  );
+                },
               ),
             ),
           ],
