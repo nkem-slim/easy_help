@@ -62,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             ProfileHeader(
               name: 'Mommy Uwineza',
-              // TODO: pass 'assets/images/<photo>.png' once the avatar is added.
+              imagePath: 'assets/images/human-image.jpg',
               onCameraTap: () => _comingSoon('Change photo'),
             ),
 
