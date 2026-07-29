@@ -10,8 +10,9 @@ import '../widgets/doctor_stats_row.dart';
 
 class DoctorDetailsPage extends StatelessWidget {
   final DoctorItem doctor;
+  final VoidCallback? onBookNow;
 
-  const DoctorDetailsPage({super.key, required this.doctor});
+  const DoctorDetailsPage({super.key, required this.doctor, this.onBookNow});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class DoctorDetailsPage extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
                 children: [
-                  DoctorDetailsCard(doctor: doctor),
+                  DoctorDetailsCard(doctor: doctor, onBookNow: onBookNow),
                   const SizedBox(height: 16),
                   DoctorStatsRow(
                     runningCount: doctor.runningCount,

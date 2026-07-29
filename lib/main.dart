@@ -1,5 +1,3 @@
-import 'package:easy_help/features/appointments/presentation/bloc/appointment_bloc.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
