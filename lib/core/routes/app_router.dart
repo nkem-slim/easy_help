@@ -6,6 +6,7 @@ import '../../features/auth/presentation/pages/signup_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/home/presentation/pages/main_shell.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/support/presentation/pages/find_clinic_page.dart';
 
 class AppRouter {
   AppRouter._();
@@ -24,6 +25,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const MainShell());
       case AppRoutes.profile:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
+      case AppRoutes.findClinic:
+        return MaterialPageRoute(builder: (_) => const FindClinicPage());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
