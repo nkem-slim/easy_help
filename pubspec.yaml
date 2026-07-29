@@ -43,6 +43,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_svg: ^2.0.10+1
 
+  # Maps (Doctor Details clinic location preview)
+  google_maps_flutter: ^2.9.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
