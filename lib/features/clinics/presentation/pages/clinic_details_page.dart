@@ -12,9 +12,7 @@ class ClinicDetailsPage extends StatelessWidget {
 
   void _bookAppointment(BuildContext context) {
     final authState = context.read<AuthBloc>().state;
-    final patientId = authState is AuthAuthenticated
-        ? authState.user.id
-        : '';
+    final patientId = authState is AuthAuthenticated ? authState.user.id : '';
     Navigator.of(context).pushNamed(
       AppRoutes.appointmentFor,
       arguments: {
