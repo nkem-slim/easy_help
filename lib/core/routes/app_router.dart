@@ -6,6 +6,7 @@ import '../../features/auth/presentation/pages/signup_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/home/presentation/pages/main_shell.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/profile/presentation/pages/user_details_page.dart';
 import '../../features/profile/presentation/pages/privacy_policy_page.dart';
 import '../../features/appointments/presentation/pages/appointment_confirmation.dart';
 import '../../features/appointments/presentation/pages/book_appointment.dart';
@@ -38,6 +39,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ProfilePage());
       case AppRoutes.privacyPolicy:
         return MaterialPageRoute(builder: (_) => const PrivacyPolicyPage());
+      case AppRoutes.userDetails:
+        return MaterialPageRoute(builder: (_) => const UserDetailsPage());
 
       case AppRoutes.doctorDetails:
         final args = settings.arguments as Map<String, String>;

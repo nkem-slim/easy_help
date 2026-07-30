@@ -24,6 +24,7 @@ class AppRoutes {
   static const String findClinic = '/find-clinic';
   static const String settings = '/settings';
   static const String privacyPolicy = '/privacy-policy';
+  static const String userDetails = '/user-details';
 }
 
 class FirestoreCollections {
