@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/app_colors.dart';
+import '../constants/app_colors.dart';
 
 /// Full-page background: pale blue in the top-left corner, white through the
 /// middle, pale green in the bottom-right.

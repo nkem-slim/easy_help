@@ -23,6 +23,13 @@ import '../../features/appointments/domain/usecases/cancel_appointment_usecase.d
 import '../../features/appointments/domain/usecases/get_booked_appointments_usecase.dart';
 import '../../features/appointments/presentation/bloc/appointment_bloc.dart';
 
+import '../../features/screening/data/datasources/screening_remote_data_source.dart';
+import '../../features/screening/data/models/screening_model.dart';
+import '../../features/screening/data/repositories/screening_repository_impl.dart';
+import '../../features/screening/domain/repositories/screening_repository.dart';
+import '../../features/screening/domain/usecases/submit_screening_usecase.dart';
+import '../../features/screening/presentation/bloc/screening_bloc.dart';
+
 final GetIt sl = GetIt.instance;
 
 // TODO: remove stub and uncomment Firebase registrations when Firebase is configured
@@ -90,6 +97,14 @@ class _AppointmentRemoteDataSourceStub implements AppointmentRemoteDataSource {
   }
 }
 
+// TODO: remove stub and uncomment Firebase registrations when Firebase is configured
+class _ScreeningRemoteDataSourceStub implements ScreeningRemoteDataSource {
+  @override
+  Future<ScreeningModel> submitScreening(ScreeningModel screening) async {
+    return ScreeningModel.fromMap(screening.toMap(), 'stub-screening-id');
+  }
+}
+
 Future<void> initDependencies() async {
   // sl.registerLazySingleton(() => FirebaseAuth.instance);
   // sl.registerLazySingleton(() => FirebaseFirestore.instance);
@@ -100,6 +115,7 @@ Future<void> initDependencies() async {
 
   _initAuth();
   _initAppointments();
+  _initScreening();
 }
 
 void _initAuth() {
@@ -152,5 +168,23 @@ void _initAppointments() {
       getBookedAppointmentsUsecase: sl(),
       cancelAppointmentUseCase: sl(),
     ),
+  );
+}
+
+void _initScreening() {
+  sl.registerLazySingleton<ScreeningRemoteDataSource>(
+    // TODO: swap stub for real impl when Firebase is configured
+    () => _ScreeningRemoteDataSourceStub(),
+    // () => ScreeningRemoteDataSourceImpl(firestore: sl()),
+  );
+
+  sl.registerLazySingleton<ScreeningRepository>(
+    () => ScreeningRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
+  );
+
+  sl.registerLazySingleton(() => SubmitScreeningUseCase(sl()));
+
+  sl.registerFactory(
+    () => ScreeningBloc(submitScreeningUseCase: sl()),
   );
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/soft_gradient_background.dart';
 import '../widgets/page_back_button.dart';
 import '../widgets/policy_bullet.dart';
-import '../widgets/soft_gradient_background.dart';
 
 /// TODO: have this copy reviewed before release
 

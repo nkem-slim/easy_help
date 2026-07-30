@@ -18,6 +18,8 @@ class AppRoutes {
   static const String communicate = '/communicate';
   static const String journal = '/journal';
   static const String screening = '/screening';
+  static const String screeningTakeTest = '/screening/take-test';
+  static const String screeningResult = '/screening-result';
   static const String support = '/support';
   static const String findClinic = '/find-clinic';
   static const String settings = '/settings';

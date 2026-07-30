@@ -1,11 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_strings.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../domain/entities/clinic_entity.dart';
 
 class ClinicDetailsPage extends StatelessWidget {
   final ClinicEntity clinic;
 
   const ClinicDetailsPage({super.key, required this.clinic});
+
+  void _bookAppointment(BuildContext context) {
+    final authState = context.read<AuthBloc>().state;
+    final patientId = authState is AuthAuthenticated
+        ? authState.user.id
+        : '';
+    Navigator.of(context).pushNamed(
+      AppRoutes.appointmentFor,
+      arguments: {
+        'doctorId': clinic.id,
+        'doctorName': clinic.name,
+        'doctorSpecialty': clinic.location,
+        'doctorImageUrl': clinic.imageAsset,
+        'patientId': patientId,
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +45,14 @@ class ClinicDetailsPage extends StatelessWidget {
                   color: clinic.logoBackgroundColor,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(clinic.logoIcon, color: Colors.white, size: 44),
+                child: ClipOval(
+                  child: Image.asset(
+                    clinic.imageAsset,
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -44,11 +71,18 @@ class ClinicDetailsPage extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.location_on, size: 16, color: AppColors.primary),
+                  const Icon(
+                    Icons.location_on,
+                    size: 16,
+                    color: AppColors.primary,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     clinic.location,
-                    style: const TextStyle(color: AppColors.primary, fontSize: 15),
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 15,
+                    ),
                   ),
                 ],
               ),
@@ -56,19 +90,26 @@ class ClinicDetailsPage extends StatelessWidget {
             const SizedBox(height: 28),
             const Text(
               'About',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               '${clinic.name} provides post-diagnosis autism support services, '
               'including screening, therapy, and caregiver guidance.',
-              style: const TextStyle(color: AppColors.textSecondary, height: 1.5),
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                height: 1.5,
+              ),
             ),
             const SizedBox(height: 32),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => _bookAppointment(context),
                 child: const Text('Book Appointment'),
               ),
             ),

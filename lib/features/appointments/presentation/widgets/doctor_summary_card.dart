@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/utils/image_provider_utils.dart';
 
 class DoctorSummaryCard extends StatelessWidget {
   final String name;
@@ -36,8 +37,8 @@ class DoctorSummaryCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.network(
-                  imageUrl,
+                child: Image(
+                  image: resolveImageProvider(imageUrl),
                   width: 64,
                   height: 64,
                   fit: BoxFit.cover,
