@@ -23,16 +23,7 @@ class _BookedAppointmentsPageState extends State<BookedAppointmentsPage> {
   }
 
   void _startBooking(BuildContext context) {
-    Navigator.of(context).pushNamed(
-      AppRoutes.doctorDetails,
-      arguments: {
-        'doctorId': '2206489',
-        'doctorName': 'Dr. Nshuti',
-        'doctorSpecialty': 'Pediatrician',
-        'doctorImageUrl': 'https://i.pravatar.cc/150?img=12',
-        'patientId': widget.patientId,
-      },
-    );
+    Navigator.of(context).pushNamed(AppRoutes.findClinic);
   }
 
   @override

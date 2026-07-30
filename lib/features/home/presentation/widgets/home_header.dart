@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_colors.dart';
-import '../../../../../core/constants/app_strings.dart';
+import '../../../../../core/navigation/main_tab_controller.dart';
 
 class HomeHeader extends StatelessWidget {
   final String userName;
@@ -51,7 +51,8 @@ class HomeHeader extends StatelessWidget {
             ],
           ),
           GestureDetector(
-            onTap: () => Navigator.of(context).pushNamed(AppRoutes.profile),
+            onTap: () =>
+                MainTabController.index.value = MainTabController.profile,
             child: const CircleAvatar(
               radius: 26,
               backgroundColor: Colors.white24,

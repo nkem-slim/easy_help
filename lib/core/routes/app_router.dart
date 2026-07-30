@@ -14,6 +14,10 @@ import '../../features/appointments/presentation/pages/appointment_for.dart';
 import '../../features/support/presentation/pages/doctor_details_page.dart';
 import '../../features/support/presentation/pages/find_clinic_page.dart';
 import '../../features/support/presentation/widgets/doctor_card.dart';
+import '../../features/journal/presentation/pages/journal_page.dart';
+import '../../features/screening/domain/entities/screening_result.dart';
+import '../../features/screening/presentation/pages/screening_result_page.dart';
+import '../../features/screening/presentation/pages/take_test_page.dart';
 
 class AppRouter {
   AppRouter._();
@@ -39,17 +43,9 @@ class AppRouter {
         final args = settings.arguments as Map<String, String>;
         return MaterialPageRoute(
           builder: (routeContext) => DoctorDetailsPage(
-            doctor: DoctorItem(
-              name: args['doctorName']!,
-              specialty: args['doctorSpecialty']!,
-              experience: '5+ Years experience',
-              ratingPercent: '90%',
-              patientStories: '50 Patient Stories',
-              clinicName: 'Easy Help Clinic',
-              availability: 'By Appointment',
-              location: 'Kigali',
-              imageAsset: 'assets/images/clinic-1.jpg',
-            ),
+            // Same mock doctor as FindClinicPage, so this route and the push
+            // from the doctor list show identical details.
+            doctor: mockDrNshunti,
             onBookNow: () => Navigator.of(routeContext).pushNamed(
               AppRoutes.appointmentFor,
               arguments: args,
@@ -91,6 +87,15 @@ class AppRouter {
         );
       case AppRoutes.findClinic:
         return MaterialPageRoute(builder: (_) => const FindClinicPage());
+      case AppRoutes.journal:
+        return MaterialPageRoute(builder: (_) => const JournalPage());
+      case AppRoutes.screeningTakeTest:
+        return MaterialPageRoute(builder: (_) => const TakeTestPage());
+      case AppRoutes.screeningResult:
+        final result = settings.arguments as ScreeningResult;
+        return MaterialPageRoute(
+          builder: (_) => ScreeningResultPage(result: result),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

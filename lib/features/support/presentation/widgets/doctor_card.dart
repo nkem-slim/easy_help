@@ -50,6 +50,25 @@ class DoctorItem {
   });
 }
 
+// TODO(support-data-layer): replace with a real DoctorRepository lookup by
+// doctorId once one exists. Kept as one shared constant so every entry point
+// into the doctor details / booking flow shows the same mock doctor instead
+// of each screen inventing its own placeholder.
+const String mockDoctorId = '2206489';
+const String mockDoctorNetworkImageUrl = 'https://i.pravatar.cc/150?img=12';
+const DoctorItem mockDrNshunti = DoctorItem(
+  name: 'Dr. Nshunti',
+  specialty: 'ADS Specialist',
+  experience: '7 Years experience',
+  ratingPercent: '87%',
+  patientStories: '69 Patient Stories',
+  clinicName: 'Legacy Clinic',
+  availability: '24/7 Availability',
+  location: 'Kigali',
+  imageAsset: 'assets/images/clinic-0.png',
+  isFavorite: true,
+);
+
 class DoctorCard extends StatelessWidget {
   final DoctorItem item;
   final VoidCallback? onTap;

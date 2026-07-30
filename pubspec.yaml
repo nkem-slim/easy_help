@@ -52,6 +52,9 @@ dependencies:
   # Web-only script injection for the Google Maps JS API
   web: ^1.1.0
 
+  # In-app YouTube playback for "Helpful Videos" sections
+  youtube_player_flutter: ^10.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

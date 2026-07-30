@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_strings.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../widgets/doctor_card.dart';
 import '../widgets/find_clinic_header.dart';
 import '../widgets/find_clinic_search_bar.dart';
@@ -17,44 +20,9 @@ class _FindClinicPageState extends State<FindClinicPage> {
   final _searchController = TextEditingController(text: '');
   String _query = 'Kigali';
 
-  static const _doctors = [
-    DoctorItem(
-      name: 'Dr. Nshunti',
-      specialty: 'ADS Specialist',
-      experience: '7 Years experience',
-      ratingPercent: '87%',
-      patientStories: '69 Patient Stories',
-      clinicName: 'Legacy Clinic',
-      availability: '24/7 Availability',
-      location: 'Kigali',
-      imageAsset: 'assets/images/clinic-0.png',
-      isFavorite: true,
-    ),
-    DoctorItem(
-      name: 'Dr. Nshunti',
-      specialty: 'ADS Specialist',
-      experience: '7 Years experience',
-      ratingPercent: '87%',
-      patientStories: '69 Patient Stories',
-      clinicName: 'Legacy Clinic',
-      availability: '24/7 Availability',
-      location: 'Kigali',
-      imageAsset: 'assets/images/clinic-0.png',
-      isFavorite: true,
-    ),
-    DoctorItem(
-      name: 'Dr. Nshunti',
-      specialty: 'ADS Specialist',
-      experience: '7 Years experience',
-      ratingPercent: '87%',
-      patientStories: '69 Patient Stories',
-      clinicName: 'Legacy Clinic',
-      availability: '24/7 Availability',
-      location: 'Kigali',
-      imageAsset: 'assets/images/clinic-0.png',
-      isFavorite: true,
-    ),
-  ];
+  // TODO(support-data-layer): replace with a real doctor list once a
+  // DoctorRepository exists — all 3 currently point at the same mock doctor.
+  static const _doctors = [mockDrNshunti, mockDrNshunti, mockDrNshunti];
 
   List<DoctorItem> get _filteredDoctors {
     final query = _query.trim().toLowerCase();
@@ -96,7 +64,27 @@ class _FindClinicPageState extends State<FindClinicPage> {
                   void openDetails() {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => DoctorDetailsPage(doctor: doctor),
+                        builder: (detailsContext) => DoctorDetailsPage(
+                          doctor: doctor,
+                          onBookNow: () {
+                            final authState = detailsContext
+                                .read<AuthBloc>()
+                                .state;
+                            final patientId = authState is AuthAuthenticated
+                                ? authState.user.id
+                                : '';
+                            Navigator.of(detailsContext).pushNamed(
+                              AppRoutes.appointmentFor,
+                              arguments: {
+                                'doctorId': mockDoctorId,
+                                'doctorName': doctor.name,
+                                'doctorSpecialty': doctor.specialty,
+                                'doctorImageUrl': mockDoctorNetworkImageUrl,
+                                'patientId': patientId,
+                              },
+                            );
+                          },
+                        ),
                       ),
                     );
                   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/app_strings.dart';
 
 class _ClinicItem {
   final String name;
@@ -60,7 +61,9 @@ class HomeClinicsSection extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () => Navigator.of(context).pushNamed(
+                  AppRoutes.findClinic,
+                ),
                 child: const Text(
                   'See all >',
                   style: TextStyle(
