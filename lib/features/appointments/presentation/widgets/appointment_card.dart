@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/utils/image_provider_utils.dart';
 import '../../domain/entities/appointment_entity.dart';
 
 class AppointmentCard extends StatelessWidget {
@@ -18,6 +17,21 @@ class AppointmentCard extends StatelessWidget {
     }
   }
 
+  Widget _buildAvatar() {
+    final isNetworkImage = appointment.doctorImageUrl.startsWith('http');
+    return CircleAvatar(
+      radius: 28,
+      backgroundColor: AppColors.primary.withValues(alpha: 0.12),
+      backgroundImage: isNetworkImage
+          ? NetworkImage(appointment.doctorImageUrl)
+          : AssetImage(appointment.doctorImageUrl) as ImageProvider,
+      onBackgroundImageError: (_, __) {},
+      child: appointment.doctorImageUrl.isEmpty
+          ? const Icon(Icons.person_rounded, color: AppColors.primary)
+          : null,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,10 +43,7 @@ class AppointmentCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 28,
-            backgroundImage: resolveImageProvider(appointment.doctorImageUrl),
-          ),
+          _buildAvatar(),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
