@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/soft_gradient_background.dart';
 import '../widgets/date_of_birth_selector.dart';
 import '../widgets/gender_selector.dart';
 import '../widgets/labeled_field.dart';
 import '../widgets/page_back_button.dart';
-import '../widgets/soft_gradient_background.dart';
 
 /// Form for editing the signed-in caregiver's own details.
 ///

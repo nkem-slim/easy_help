@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/utils/image_provider_utils.dart';
 import '../../domain/entities/appointment_entity.dart';
 
 class AppointmentCard extends StatelessWidget {
@@ -30,7 +31,7 @@ class AppointmentCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 28,
-            backgroundImage: NetworkImage(appointment.doctorImageUrl),
+            backgroundImage: resolveImageProvider(appointment.doctorImageUrl),
           ),
           const SizedBox(width: 12),
           Expanded(

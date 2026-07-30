@@ -2,19 +2,36 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_strings.dart';
+import '../../../clinics/domain/entities/clinic_entity.dart';
+import '../../../clinics/presentation/pages/clinic_details_page.dart';
 
 class _ClinicItem {
+  final String id;
   final String name;
   final String phone;
+  final String location;
   final Color accentColor;
   final String imageAsset;
 
   const _ClinicItem({
+    required this.id,
     required this.name,
     required this.phone,
+    required this.location,
     required this.accentColor,
     required this.imageAsset,
   });
+
+  ClinicEntity toEntity() {
+    return ClinicEntity(
+      id: id,
+      name: name,
+      location: location,
+      imageAsset: imageAsset,
+      logoBackgroundColor: accentColor,
+      logoIcon: Icons.local_hospital,
+    );
+  }
 }
 
 class HomeClinicsSection extends StatelessWidget {
@@ -22,20 +39,26 @@ class HomeClinicsSection extends StatelessWidget {
 
   static const _clinics = [
     _ClinicItem(
+      id: 'legacy-call-center',
       name: 'Legacy Call Center',
       phone: '+250 788 000 000',
+      location: 'Kigali, Rwa',
       accentColor: AppColors.primary,
       imageAsset: 'assets/images/clinic-0.jpg',
     ),
     _ClinicItem(
+      id: 'king-faisal-hospital',
       name: 'King Faisal Hospital Rwanda',
       phone: '+250 252 582 421',
+      location: 'Kigali, Rwa',
       accentColor: Color(0xFF3B6FD4),
       imageAsset: 'assets/images/clinic-1.jpg',
     ),
     _ClinicItem(
+      id: 'caraes-ndera',
       name: 'CARAES Ndera',
       phone: '+250 252 580 494',
+      location: 'Kigali, Rwa',
       accentColor: Color(0xFF5BA4CF),
       imageAsset: 'assets/images/clinic-2.jpg',
     ),
@@ -61,9 +84,8 @@ class HomeClinicsSection extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () => Navigator.of(context).pushNamed(
-                  AppRoutes.findClinic,
-                ),
+                onTap: () =>
+                    Navigator.of(context).pushNamed(AppRoutes.findClinic),
                 child: const Text(
                   'See all >',
                   style: TextStyle(
@@ -98,75 +120,82 @@ class _ClinicCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 180,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, 0.06),
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ClinicDetailsPage(clinic: item.toEntity()),
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(14),
-              topRight: Radius.circular(14),
+      child: Container(
+        width: 180,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: const [
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.06),
+              blurRadius: 8,
+              offset: Offset(0, 2),
             ),
-            child: Image.asset(
-              item.imageAsset,
-              height: 70,
-              width: double.infinity,
-              fit: BoxFit.cover,
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(14),
+                topRight: Radius.circular(14),
+              ),
+              child: Image.asset(
+                item.imageAsset,
+                height: 70,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          Container(height: 4, color: item.accentColor),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.name,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+            Container(height: 4, color: item.accentColor),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.name,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.phone_rounded,
-                      size: 12,
-                      color: AppColors.textSecondary,
-                    ),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        item.phone,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: AppColors.textSecondary,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.phone_rounded,
+                        size: 12,
+                        color: AppColors.textSecondary,
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          item.phone,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textSecondary,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
