@@ -5,8 +5,9 @@ import '../../../../../core/navigation/main_tab_controller.dart';
 
 class HomeHeader extends StatelessWidget {
   final String userName;
+  final String? imagePath;
 
-  const HomeHeader({super.key, required this.userName});
+  const HomeHeader({super.key, required this.userName, this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +54,12 @@ class HomeHeader extends StatelessWidget {
           GestureDetector(
             onTap: () =>
                 MainTabController.index.value = MainTabController.profile,
-            child: const CircleAvatar(
+            child: CircleAvatar(
               radius: 26,
               backgroundColor: Colors.white24,
-              backgroundImage: AssetImage('assets/images/human-image.jpg'),
+              backgroundImage: AssetImage(
+                imagePath ?? 'assets/images/easy_help_logo.png',
+              ),
             ),
           ),
         ],

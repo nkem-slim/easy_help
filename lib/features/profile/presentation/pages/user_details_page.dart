@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/soft_gradient_background.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../widgets/date_of_birth_selector.dart';
 import '../widgets/gender_selector.dart';
 import '../widgets/labeled_field.dart';
@@ -18,9 +20,6 @@ class UserDetailsPage extends StatefulWidget {
 }
 
 class _UserDetailsPageState extends State<UserDetailsPage> {
-  // TODO: populate these from the signed-in user once the profile feature has a
-  // data layer. Until then the fields start empty and show the design's values
-  // as hints, rather than seeding data the user never entered.
   final _nameController = TextEditingController();
   final _mobileController = TextEditingController();
   final _emailController = TextEditingController();
@@ -29,6 +28,16 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   int? _day;
   int? _month;
   int? _year;
+
+  @override
+  void initState() {
+    super.initState();
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      _nameController.text = authState.user.name;
+      _emailController.text = authState.user.email;
+    }
+  }
 
   @override
   void dispose() {
