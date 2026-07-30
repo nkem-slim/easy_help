@@ -62,18 +62,9 @@ class ProfileHeader extends StatelessWidget {
                     CircleAvatar(
                       radius: 56,
                       backgroundColor: Colors.white,
-                      backgroundImage: imagePath != null
-                          ? AssetImage(imagePath!)
-                          : null,
-                      child: imagePath == null
-                          ? Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Image.asset(
-                                'assets/images/easy_help_logo.png',
-                                fit: BoxFit.contain,
-                              ),
-                            )
-                          : null,
+                      backgroundImage: AssetImage(
+                        imagePath ?? 'assets/images/easy_help_logo.png',
+                      ),
                     ),
                     Positioned(
                       right: 0,
