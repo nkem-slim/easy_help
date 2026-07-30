@@ -54,6 +54,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = context.watch<AuthBloc>().state;
+    final user = authState is AuthAuthenticated ? authState.user : null;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
@@ -61,8 +64,9 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ProfileHeader(
-              name: 'Mommy Uwineza',
-              imagePath: 'assets/images/human-image.jpg',
+              name: user?.name ?? 'Guest',
+              email: user?.email,
+              role: user?.role,
               onCameraTap: () => _comingSoon('Change photo'),
             ),
 
@@ -125,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
             const Divider(height: 1, color: AppColors.divider, indent: 20, endIndent: 20),
             ProfileTile(
               title: 'Languages',
-              trailingText: 'English',
+              trailingText: user?.preferredLanguage ?? 'English',
               onTap: () => _comingSoon('Languages'),
             ),
             const Divider(height: 1, color: AppColors.divider, indent: 20, endIndent: 20),

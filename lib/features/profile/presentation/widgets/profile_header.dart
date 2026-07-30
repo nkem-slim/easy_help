@@ -4,17 +4,21 @@ import '../../../../core/constants/app_colors.dart';
 
 /// Green header block: screen title, avatar with camera button, and the name.
 ///
-/// [imagePath] is an asset path. While it is null a neutral placeholder is
-/// drawn, so the screen still renders before the real photo is added to
-/// `assets/images/`.
+/// [imagePath] is an asset path. While it is null the Easy Help logo (the
+/// same asset used on the splash screen) is drawn instead, so the screen
+/// still renders before the real photo is added to `assets/images/`.
 class ProfileHeader extends StatelessWidget {
   final String name;
+  final String? email;
+  final String? role;
   final String? imagePath;
   final VoidCallback? onCameraTap;
 
   const ProfileHeader({
     super.key,
     required this.name,
+    this.email,
+    this.role,
     this.imagePath,
     this.onCameraTap,
   });
@@ -24,22 +28,22 @@ class ProfileHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
-        // Estimated stops — refine once the Figma "Linear" style hex values
-        // are available. BoxDecoration accepts a gradient or a color, never both.
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            AppColors.headerGradientStart,
-            AppColors.headerGradientEnd,
-          ],
+          colors: [AppColors.headerGradientStart, AppColors.headerGradientEnd],
         ),
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
       ),
       child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 28),
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 8,
+            bottom: 28,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -58,15 +62,9 @@ class ProfileHeader extends StatelessWidget {
                     CircleAvatar(
                       radius: 56,
                       backgroundColor: Colors.white,
-                      backgroundImage:
-                          imagePath != null ? AssetImage(imagePath!) : null,
-                      child: imagePath == null
-                          ? const Icon(
-                              Icons.person_rounded,
-                              size: 56,
-                              color: AppColors.textSecondary,
-                            )
-                          : null,
+                      backgroundImage: AssetImage(
+                        imagePath ?? 'assets/images/easy_help_logo.png',
+                      ),
                     ),
                     Positioned(
                       right: 0,
@@ -102,6 +100,38 @@ class ProfileHeader extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              if (email != null && email!.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Text(
+                  email!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+              ],
+              if (role != null && role!.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      role!.toUpperCase(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),
