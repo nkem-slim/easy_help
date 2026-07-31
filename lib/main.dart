@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'core/constants/app_strings.dart';
 import 'core/di/injection_container.dart' as di;
@@ -23,20 +22,17 @@ Future<void> main() async {
 
   await di.initDependencies();
 
-  final authBloc = di.sl<AuthBloc>();
-
-  runApp(EasyHelpApp(authBloc: authBloc));
+  runApp(const EasyHelpApp());
 }
 
 class EasyHelpApp extends StatelessWidget {
-  final AuthBloc authBloc;
-  const EasyHelpApp({super.key, required this.authBloc});
+  const EasyHelpApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthBloc>.value(value: authBloc),
+        BlocProvider<AuthBloc>(create: (_) => di.sl<AuthBloc>()),
         BlocProvider<AppointmentBloc>(create: (_) => di.sl<AppointmentBloc>()),
       ],
       child: MaterialApp(
@@ -44,7 +40,7 @@ class EasyHelpApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         initialRoute: AppRoutes.splash,
-        onGenerateRoute: AppRouter(authBloc: authBloc).onGenerateRoute,
+        onGenerateRoute: AppRouter.onGenerateRoute,
       ),
     );
   }
