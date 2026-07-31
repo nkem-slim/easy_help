@@ -41,7 +41,7 @@ class _AppointmentRemoteDataSourceStub implements AppointmentRemoteDataSource {
       doctorId: 'doc-1',
       doctorName: 'Dr. Nshuti',
       doctorSpecialty: 'Pediatrician',
-      doctorImageUrl: 'https://i.pravatar.cc/150?img=12',
+      doctorImageUrl: 'assets/images/dr-nshuti.png',
       patientName: 'Uwineza',
       contactNumber: '0788000000',
       relationship: 'Mother',
@@ -127,9 +127,7 @@ void _initAuth() {
 
 void _initAppointments() {
   sl.registerLazySingleton<AppointmentRemoteDataSource>(
-    // TODO: swap stub for real impl when Firebase is configured
-    () => _AppointmentRemoteDataSourceStub(),
-    // () => AppointmentRemoteDataSourceImpl(firestore: sl()),
+    () => AppointmentRemoteDataSourceImpl(firestore: sl()),
   );
 
   sl.registerLazySingleton<AppointmentRepository>(
@@ -162,7 +160,5 @@ void _initScreening() {
 
   sl.registerLazySingleton(() => SubmitScreeningUseCase(sl()));
 
-  sl.registerFactory(
-    () => ScreeningBloc(submitScreeningUseCase: sl()),
-  );
+  sl.registerFactory(() => ScreeningBloc(submitScreeningUseCase: sl()));
 }
