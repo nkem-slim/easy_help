@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/appointment_entity.dart';
 import '../../domain/usecases/book_appointment_usecase.dart';
@@ -25,32 +24,16 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   }
 
   Future<void> _onBookRequested(
-  AppointmentBookRequested event,
-  Emitter<AppointmentState> emit,
-) async {
-  debugPrint("=== BOOK APPOINTMENT START ===");
-  debugPrint(event.appointment.patientId);
-
-  emit(const AppointmentLoading());
-
-  final result = await bookAppointmentUsecase(event.appointment);
-
-  result.fold(
-    (failure) {
-      debugPrint("BOOK FAILED");
-      debugPrint(failure.message);
-      emit(AppointmentFailure(failure.message));
-    },
-    (appointment) {
-      debugPrint("BOOK SUCCESS");
-      debugPrint(appointment.id);
-
-      emit(AppointmentBooked(appointment));
-
-      add(AppointmentLoadRequested(appointment.patientId));
-    },
-  );
-}
+    AppointmentBookRequested event,
+    Emitter<AppointmentState> emit,
+  ) async {
+    emit(const AppointmentLoading());
+    final result = await bookAppointmentUsecase(event.appointment);
+    result.fold(
+      (failure) => emit(AppointmentFailure(failure.message)),
+      (appointment) => emit(AppointmentBooked(appointment)),
+    );
+  }
 
   Future<void> _onLoadRequested(
     AppointmentLoadRequested event,

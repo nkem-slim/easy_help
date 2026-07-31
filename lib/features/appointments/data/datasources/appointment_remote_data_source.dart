@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../models/appointment_model.dart';
@@ -19,24 +18,14 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
       firestore.collection(FirestoreCollections.appointments);
 
   @override
-Future<AppointmentModel> bookAppointment(AppointmentModel appointment) async {
-  try {
-    debugPrint('Writing appointment...');
-    debugPrint(appointment.toMap().toString());
-
-    final docRef = await _appointmentsRef.add(appointment.toMap());
-
-    debugPrint('Appointment created: ${docRef.id}');
-
-    return AppointmentModel.fromMap(appointment.toMap(), docRef.id);
-  } catch (e, stackTrace) {
-    debugPrint('BOOK APPOINTMENT ERROR');
-    debugPrint(e.toString());
-    debugPrint(stackTrace.toString());
-
-    throw ServerException(e.toString());
+  Future<AppointmentModel> bookAppointment(AppointmentModel appointment) async {
+    try {
+      final docRef = await _appointmentsRef.add(appointment.toMap());
+      return AppointmentModel.fromMap(appointment.toMap(), docRef.id);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
   }
-}
 
   @override
   Future<List<AppointmentModel>> getBookedAppointments(String patientId) async {

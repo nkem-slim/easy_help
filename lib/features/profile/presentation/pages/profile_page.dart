@@ -106,8 +106,6 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               ProfileHeader(
                 name: user?.name ?? 'Guest',
-                email: user?.email,
-                role: user?.role,
                 onCameraTap: () => _comingSoon('Change photo'),
               ),
 
