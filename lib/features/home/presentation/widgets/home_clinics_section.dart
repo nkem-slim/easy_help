@@ -2,67 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_strings.dart';
-import '../../../clinics/domain/entities/clinic_entity.dart';
+import '../../../../../core/widgets/fallback_image.dart';
+import '../../../clinics/data/mock_clinics.dart';
 import '../../../clinics/presentation/pages/clinic_details_page.dart';
-
-class _ClinicItem {
-  final String id;
-  final String name;
-  final String phone;
-  final String location;
-  final Color accentColor;
-  final String imageAsset;
-
-  const _ClinicItem({
-    required this.id,
-    required this.name,
-    required this.phone,
-    required this.location,
-    required this.accentColor,
-    required this.imageAsset,
-  });
-
-  ClinicEntity toEntity() {
-    return ClinicEntity(
-      id: id,
-      name: name,
-      location: location,
-      imageAsset: imageAsset,
-      logoBackgroundColor: accentColor,
-      logoIcon: Icons.local_hospital,
-    );
-  }
-}
 
 class HomeClinicsSection extends StatelessWidget {
   const HomeClinicsSection({super.key});
 
-  static const _clinics = [
-    _ClinicItem(
-      id: 'legacy-call-center',
-      name: 'Legacy Call Center',
-      phone: '+250 788 000 000',
-      location: 'Kigali, Rwa',
-      accentColor: AppColors.primary,
-      imageAsset: 'assets/images/clinic-0.jpg',
-    ),
-    _ClinicItem(
-      id: 'king-faisal-hospital',
-      name: 'King Faisal Hospital Rwanda',
-      phone: '+250 252 582 421',
-      location: 'Kigali, Rwa',
-      accentColor: Color(0xFF3B6FD4),
-      imageAsset: 'assets/images/clinic-1.jpg',
-    ),
-    _ClinicItem(
-      id: 'caraes-ndera',
-      name: 'CARAES Ndera',
-      phone: '+250 252 580 494',
-      location: 'Kigali, Rwa',
-      accentColor: Color(0xFF5BA4CF),
-      imageAsset: 'assets/images/clinic-2.jpg',
-    ),
-  ];
+  static const _maxClinics = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -103,9 +50,9 @@ class HomeClinicsSection extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: _clinics.length,
+            itemCount: _maxClinics,
             separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (context, index) => _ClinicCard(item: _clinics[index]),
+            itemBuilder: (context, index) => _ClinicCard(item: mockClinics[index]),
           ),
         ),
       ],
@@ -114,7 +61,7 @@ class HomeClinicsSection extends StatelessWidget {
 }
 
 class _ClinicCard extends StatelessWidget {
-  final _ClinicItem item;
+  final ClinicItem item;
 
   const _ClinicCard({required this.item});
 
@@ -147,8 +94,8 @@ class _ClinicCard extends StatelessWidget {
                 topLeft: Radius.circular(14),
                 topRight: Radius.circular(14),
               ),
-              child: Image.asset(
-                item.imageAsset,
+              child: FallbackImage(
+                imagePath: item.imageAsset,
                 height: 70,
                 width: double.infinity,
                 fit: BoxFit.cover,

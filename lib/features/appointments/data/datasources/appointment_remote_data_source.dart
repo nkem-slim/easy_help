@@ -7,6 +7,8 @@ abstract class AppointmentRemoteDataSource {
   Future<AppointmentModel> bookAppointment(AppointmentModel appointment);
   Future<List<AppointmentModel>> getBookedAppointments(String patientId);
   Future<void> cancelAppointment(String appointmentId);
+  Future<AppointmentModel> updateAppointment(AppointmentModel appointment);
+  Future<void> deleteAppointment(String appointmentId);
 }
 
 class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
@@ -46,6 +48,25 @@ class AppointmentRemoteDataSourceImpl implements AppointmentRemoteDataSource {
   Future<void> cancelAppointment(String appointmentId) async {
     try {
       await _appointmentsRef.doc(appointmentId).update({'status': 'cancelled'});
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<AppointmentModel> updateAppointment(AppointmentModel appointment) async {
+    try {
+      await _appointmentsRef.doc(appointment.id).update(appointment.toMap());
+      return appointment;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> deleteAppointment(String appointmentId) async {
+    try {
+      await _appointmentsRef.doc(appointmentId).delete();
     } catch (e) {
       throw ServerException(e.toString());
     }

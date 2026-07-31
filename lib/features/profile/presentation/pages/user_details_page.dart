@@ -20,9 +20,6 @@ class UserDetailsPage extends StatefulWidget {
 }
 
 class _UserDetailsPageState extends State<UserDetailsPage> {
-  // TODO: populate these from the signed-in user once the profile feature has a
-  // data layer. Until then the fields start empty and show the design's values
-  // as hints, rather than seeding data the user never entered.
   final _nameController = TextEditingController();
   final _mobileController = TextEditingController();
   final _emailController = TextEditingController();
@@ -33,6 +30,12 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   int? _year;
 
   @override
+  void initState() {
+    super.initState();
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      
+@override
   void initState() {
     super.initState();
     final authState = context.read<AuthBloc>().state;
@@ -54,6 +57,14 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         _year = dob.year;
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _mobileController.dispose();
+    _emailController.dispose();
+    super.dispose();
   }
 
   void _onUpdate() {

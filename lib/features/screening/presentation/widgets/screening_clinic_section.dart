@@ -25,7 +25,7 @@ class ScreeningClinicSection extends StatelessWidget {
       ClinicCard(
         name: 'King Faisal Hospital',
         subtitle: 'Specialized Pediatric Development Wing',
-        imageAsset: 'assets/images/clinic-1.jpg',
+        imageAsset: '',
         rating: 4.9,
         distanceLabel: '1.2 km away',
         isVerified: true,
@@ -36,7 +36,7 @@ class ScreeningClinicSection extends StatelessWidget {
       ClinicCard(
         name: 'CARAES Ndera',
         subtitle: 'Child & Adolescent Mental Health Unit',
-        imageAsset: 'assets/images/clinic-2.jpg',
+        imageAsset: '',
         rating: 4.6,
         distanceLabel: '3.8 km away',
         isVerified: true,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/fallback_image.dart';
 
 const List<String> _defaultDoctorServices = [
   'Patient care should be the number one priority.',
@@ -65,7 +66,7 @@ const DoctorItem mockDrNshunti = DoctorItem(
   clinicName: 'Legacy Clinic',
   availability: '24/7 Availability',
   location: 'Kigali',
-  imageAsset: 'assets/images/clinic-0.png',
+  imageAsset: '',
   isFavorite: true,
 );
 
@@ -110,8 +111,8 @@ class DoctorCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  item.imageAsset,
+                child: FallbackImage(
+                  imagePath: item.imageAsset,
                   width: 72,
                   height: 82,
                   fit: BoxFit.cover,

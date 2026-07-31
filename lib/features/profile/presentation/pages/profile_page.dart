@@ -80,20 +80,17 @@ class _ProfilePageState extends State<ProfilePage> {
     final authState = context.watch<AuthBloc>().state;
     final user = authState is AuthAuthenticated ? authState.user : null;
 
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthGoogleLinkSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Google account linked'),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        } else if (state is AuthFailureState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              behavior: SnackBarBehavior.floating,
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ProfileHeader(
+              name: user?.name ?? 'Guest',
+              email: user?.email,
+              role: user?.role,
+              onCameraTap: () => _comingSoon('Change photo'),
             ),
           );
         }
@@ -119,11 +116,19 @@ class _ProfilePageState extends State<ProfilePage> {
                 onTap: () =>
                     Navigator.pushNamed(context, AppRoutes.changePassword),
               ),
-              const Divider(
-                height: 1,
-                color: AppColors.divider,
-                indent: 20,
-                endIndent: 20,
+              onTap: () => _comingSoon('Change Password'),
+            ),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
+            ProfileTile(
+              title: 'Notifications',
+              leading: const ProfileIconBadge(
+                icon: Icons.notifications_rounded,
+                color: AppColors.badgeGreen,
               ),
               ProfileTile(
                 title: 'Notifications',
@@ -165,6 +170,35 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 onTap: () => Navigator.pushNamed(context, AppRoutes.aboutUs),
               ),
+            ),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
+            ProfileTile(
+              title: 'Edit Profile',
+              leading: const ProfileIconBadge(
+                icon: Icons.edit_rounded,
+                color: AppColors.badgeBlue,
+              ),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.userDetails),
+            ),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
+            ProfileTile(
+              title: 'About us',
+              leading: const ProfileIconBadge(
+                icon: Icons.people_rounded,
+                color: AppColors.badgeOrange,
+              ),
+              onTap: () => _comingSoon('About us'),
+            ),
 
               const ProfileSectionTitle('More options'),
               ProfileTile(
@@ -174,55 +208,55 @@ class _ProfilePageState extends State<ProfilePage> {
                   (v) => setState(() => _textMessages = v),
                 ),
               ),
-              const Divider(
-                height: 1,
-                color: AppColors.divider,
-                indent: 20,
-                endIndent: 20,
+            ),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
+            ProfileTile(
+              title: 'Phone calls',
+              trailing: _switch(
+                _phoneCalls,
+                (v) => setState(() => _phoneCalls = v),
               ),
-              ProfileTile(
-                title: 'Phone calls',
-                trailing: _switch(
-                  _phoneCalls,
-                  (v) => setState(() => _phoneCalls = v),
-                ),
-              ),
-              const Divider(
-                height: 1,
-                color: AppColors.divider,
-                indent: 20,
-                endIndent: 20,
-              ),
-              ProfileTile(
-                title: 'Languages',
-                trailingText: user?.preferredLanguage ?? 'English',
-                onTap: _pickLanguage,
-              ),
-              const Divider(
-                height: 1,
-                color: AppColors.divider,
-                indent: 20,
-                endIndent: 20,
-              ),
-              ProfileTile(
-                title: 'Privacy Policy',
-                onTap: () =>
-                    Navigator.pushNamed(context, AppRoutes.privacyPolicy),
-              ),
-              const Divider(
-                height: 1,
-                color: AppColors.divider,
-                indent: 20,
-                endIndent: 20,
-              ),
-              ProfileTile(title: 'Link Google Account', onTap: _linkGoogle),
-              const Divider(
-                height: 1,
-                color: AppColors.divider,
-                indent: 20,
-                endIndent: 20,
-              ),
-              ProfileTile(title: 'Log Out', onTap: _logout),
+            ),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
+            ProfileTile(
+              title: 'Languages',
+              trailingText: user?.preferredLanguage ?? 'English',
+              onTap: () => _comingSoon('Languages'),
+            ),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
+            ProfileTile(
+              title: 'Privacy Policy',
+              onTap: () =>
+                  Navigator.pushNamed(context, AppRoutes.privacyPolicy),
+            ),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
+            ProfileTile(title: 'Log Out', onTap: _logout),
 
               const SizedBox(height: 24),
             ],

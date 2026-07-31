@@ -3,6 +3,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/video/youtube_player_page.dart';
+import '../../../../../core/widgets/fallback_image.dart';
 
 class _VideoItem {
   final String title;
@@ -28,22 +29,22 @@ class HomeVideosSection extends StatelessWidget {
   static final _videos = [
     _VideoItem(
       title: 'Understanding Autism',
-      imageAsset: 'assets/images/clinic-0.jpg',
+      imageAsset: '',
       videoId: _placeholderVideoId,
     ),
     _VideoItem(
       title: 'Daily Routines',
-      imageAsset: 'assets/images/clinic-1.jpg',
+      imageAsset: '',
       videoId: _placeholderVideoId,
     ),
     _VideoItem(
       title: 'Communication Tips',
-      imageAsset: 'assets/images/clinic-2.jpg',
+      imageAsset: '',
       videoId: _placeholderVideoId,
     ),
     _VideoItem(
       title: 'Sensory Activities',
-      imageAsset: 'assets/images/clinic-0.jpg',
+      imageAsset: '',
       videoId: _placeholderVideoId,
     ),
   ];
@@ -101,7 +102,7 @@ class _VideoCard extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Image.asset(item.imageAsset, fit: BoxFit.cover),
+              FallbackImage(imagePath: item.imageAsset, fit: BoxFit.cover),
               // Dark gradient overlay at the bottom for the title
               Align(
                 alignment: Alignment.bottomCenter,

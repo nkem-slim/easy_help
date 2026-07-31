@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/navigation/main_tab_controller.dart';
+import '../../../../../core/widgets/fallback_image.dart';
 
 class HomeHeader extends StatelessWidget {
   final String userName;
+  final String? imagePath;
 
-  const HomeHeader({super.key, required this.userName});
+  const HomeHeader({super.key, required this.userName, this.imagePath});
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +55,12 @@ class HomeHeader extends StatelessWidget {
           GestureDetector(
             onTap: () =>
                 MainTabController.index.value = MainTabController.profile,
-            child: const CircleAvatar(
-              radius: 26,
-              backgroundColor: Colors.white24,
-              backgroundImage: AssetImage('assets/images/human-image.jpg'),
+            child: ClipOval(
+              child: SizedBox(
+                width: 52,
+                height: 52,
+                child: FallbackImage(imagePath: imagePath),
+              ),
             ),
           ),
         ],

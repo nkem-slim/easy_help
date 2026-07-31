@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/utils/image_provider_utils.dart';
+import '../../../../core/widgets/fallback_image.dart';
 import '../../domain/entities/appointment_entity.dart';
 
 class AppointmentCard extends StatelessWidget {
   final AppointmentEntity appointment;
-  const AppointmentCard({super.key, required this.appointment});
+  final VoidCallback? onTap;
+  const AppointmentCard({super.key, required this.appointment, this.onTap});
 
   Color get _statusColor {
     switch (appointment.status) {
@@ -20,6 +21,10 @@ class AppointmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return GestureDetector(onTap: onTap, child: _buildCard());
+  }
+
+  Widget _buildCard() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -29,9 +34,12 @@ class AppointmentCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 28,
-            backgroundImage: resolveImageProvider(appointment.doctorImageUrl),
+          ClipOval(
+            child: SizedBox(
+              width: 56,
+              height: 56,
+              child: FallbackImage(imagePath: appointment.doctorImageUrl),
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(

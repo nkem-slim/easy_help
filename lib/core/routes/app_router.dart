@@ -12,6 +12,7 @@ import '../../features/profile/presentation/pages/about_us_page.dart';
 import '../../features/profile/presentation/pages/privacy_policy_page.dart';
 import '../../features/profile/presentation/pages/change_password_page.dart';
 import '../../features/appointments/presentation/pages/appointment_confirmation.dart';
+import '../../features/appointments/presentation/pages/appointment_details_page.dart';
 import '../../features/appointments/presentation/pages/book_appointment.dart';
 import '../../features/appointments/domain/entities/appointment_entity.dart';
 import '../../features/appointments/presentation/pages/appointment_for.dart';
@@ -94,6 +95,11 @@ class AppRouter {
         final appointment = settings.arguments as AppointmentEntity;
         return MaterialPageRoute(
           builder: (_) => AppointmentConfirmationPage(appointment: appointment),
+        );
+      case AppRoutes.appointmentDetails:
+        final appointment = settings.arguments as AppointmentEntity;
+        return MaterialPageRoute(
+          builder: (_) => AppointmentDetailsPage(appointment: appointment),
         );
       case AppRoutes.findClinic:
         return MaterialPageRoute(builder: (_) => const FindClinicPage());

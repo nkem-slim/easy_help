@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -17,12 +18,13 @@ import '../../features/auth/domain/usecases/change_password_usecase.dart';
 import '../../features/auth/domain/usecases/link_google_account_usecase.dart';
 
 import '../../features/appointments/data/datasources/appointment_remote_data_source.dart';
-import '../../features/appointments/data/models/appointment_model.dart';
 import '../../features/appointments/data/repositories/appointment_repository_impl.dart';
 import '../../features/appointments/domain/repositories/appointment_repository.dart';
 import '../../features/appointments/domain/usecases/book_appointment_usecase.dart';
 import '../../features/appointments/domain/usecases/cancel_appointment_usecase.dart';
+import '../../features/appointments/domain/usecases/delete_appointment_usecase.dart';
 import '../../features/appointments/domain/usecases/get_booked_appointments_usecase.dart';
+import '../../features/appointments/domain/usecases/update_appointment_usecase.dart';
 import '../../features/appointments/presentation/bloc/appointment_bloc.dart';
 
 import '../../features/screening/data/datasources/screening_remote_data_source.dart';
@@ -82,7 +84,15 @@ class _ScreeningRemoteDataSourceStub implements ScreeningRemoteDataSource {
 Future<void> initDependencies() async {
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
-  sl.registerLazySingleton(() => GoogleSignIn());
+  sl.registerLazySingleton(
+    () => GoogleSignIn(
+      // Web (unlike Android/iOS) has no google-services.json/plist to read
+      // the OAuth client id from, so it must be passed explicitly here.
+      clientId: kIsWeb
+          ? '673918271872-vpn9gscug1bgfqj90hgqjg1d84kk3ll7.apps.googleusercontent.com'
+          : null,
+    ),
+  );
   sl.registerLazySingleton(() => Connectivity());
 
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
@@ -128,9 +138,7 @@ void _initAuth() {
 
 void _initAppointments() {
   sl.registerLazySingleton<AppointmentRemoteDataSource>(
-    // TODO: swap stub for real impl when Firebase is configured
-    () => _AppointmentRemoteDataSourceStub(),
-    // () => AppointmentRemoteDataSourceImpl(firestore: sl()),
+    () => AppointmentRemoteDataSourceImpl(firestore: sl()),
   );
 
   sl.registerLazySingleton<AppointmentRepository>(
@@ -140,12 +148,16 @@ void _initAppointments() {
   sl.registerLazySingleton(() => BookAppointmentUsecase(sl()));
   sl.registerLazySingleton(() => GetBookedAppointmentsUsecase(sl()));
   sl.registerLazySingleton(() => CancelAppointmentUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateAppointmentUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteAppointmentUseCase(sl()));
 
   sl.registerFactory(
     () => AppointmentBloc(
       bookAppointmentUsecase: sl(),
       getBookedAppointmentsUsecase: sl(),
       cancelAppointmentUseCase: sl(),
+      updateAppointmentUseCase: sl(),
+      deleteAppointmentUseCase: sl(),
     ),
   );
 }

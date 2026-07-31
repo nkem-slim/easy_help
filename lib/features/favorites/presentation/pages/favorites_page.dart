@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/fallback_image.dart';
 import '../../../../core/widgets/soft_gradient_background.dart';
 import '../../../clinics/domain/entities/clinic_entity.dart';
 import '../../../clinics/presentation/pages/clinic_details_page.dart';
@@ -21,7 +22,7 @@ class _FavouriteClinicsPageState extends State<FavouriteClinicsPage> {
       id: 'legacy-1',
       name: 'Legacy Clinic',
       location: 'Kigali, Rwa',
-      imageAsset: 'assets/images/clinic-0.jpg',
+      imageAsset: '',
       logoBackgroundColor: Color(0xFF2B2B2B),
       logoIcon: Icons.local_hospital,
     ),
@@ -29,7 +30,7 @@ class _FavouriteClinicsPageState extends State<FavouriteClinicsPage> {
       id: 'king-faisal-1',
       name: 'King Faisal',
       location: 'Kigali, Rwa',
-      imageAsset: 'assets/images/clinic-1.jpg',
+      imageAsset: '',
       logoBackgroundColor: AppColors.primary,
       logoIcon: Icons.local_hospital,
     ),
@@ -37,7 +38,7 @@ class _FavouriteClinicsPageState extends State<FavouriteClinicsPage> {
       id: 'legacy-2',
       name: 'Legacy Clinic',
       location: 'Kigali, Rwa',
-      imageAsset: 'assets/images/clinic-0.jpg',
+      imageAsset: '',
       logoBackgroundColor: Color(0xFF2B2B2B),
       logoIcon: Icons.local_hospital,
     ),
@@ -45,7 +46,7 @@ class _FavouriteClinicsPageState extends State<FavouriteClinicsPage> {
       id: 'king-faisal-2',
       name: 'King Faisal',
       location: 'Kigali, Rwa',
-      imageAsset: 'assets/images/clinic-1.jpg',
+      imageAsset: '',
       logoBackgroundColor: AppColors.primary,
       logoIcon: Icons.local_hospital,
     ),
@@ -53,7 +54,7 @@ class _FavouriteClinicsPageState extends State<FavouriteClinicsPage> {
       id: 'legacy-3',
       name: 'Legacy Clinic',
       location: 'Kigali, Rwa',
-      imageAsset: 'assets/images/clinic-0.jpg',
+      imageAsset: '',
       logoBackgroundColor: Color(0xFF2B2B2B),
       logoIcon: Icons.local_hospital,
     ),
@@ -61,7 +62,7 @@ class _FavouriteClinicsPageState extends State<FavouriteClinicsPage> {
       id: 'king-faisal-3',
       name: 'King Faisal',
       location: 'Kigali, Rwa',
-      imageAsset: 'assets/images/clinic-1.jpg',
+      imageAsset: '',
       logoBackgroundColor: AppColors.primary,
       logoIcon: Icons.local_hospital,
     ),
@@ -254,8 +255,8 @@ class _ClinicCard extends StatelessWidget {
                     child: AspectRatio(
                       aspectRatio: 1,
                       child: ClipOval(
-                        child: Image.asset(
-                          clinic.imageAsset,
+                        child: FallbackImage(
+                          imagePath: clinic.imageAsset,
                           fit: BoxFit.cover,
                         ),
                       ),
