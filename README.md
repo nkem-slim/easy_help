@@ -31,7 +31,7 @@ The following feature areas exist in the project structure but are currently pla
 
 - Learn (educational resources)
 - Journal (developmental progress tracking)
-- Communicate (support forum/messaging)
+- Communicate (support forum / messaging)
 - Favorites
 - Settings (some options are marked "coming soon")
 
@@ -45,10 +45,23 @@ The following feature areas exist in the project structure but are currently pla
 
 ## Architecture
 
-The project follows **clean architecture** with a feature-based structure. Each feature is organized into its own folder with **presentation**, **domain**, and **data** layers, which keeps concerns separated and makes the app easier to extend without touching unrelated modules.
+The project follows **clean architecture** with a clear split between shared core infrastructure and self-contained feature modules. Each feature under `features/` is organized into its own **presentation**, **domain**, and **data** layers, which keeps concerns separated and makes the app easier to extend without touching unrelated modules. Shared infrastructure — dependency injection, networking, navigation, theming, and reusable widgets — lives under `core/` so features can stay focused on their own logic.
 
 ```
 lib/
+├── core/
+│   ├── constants/
+│   ├── di/            # dependency injection setup
+│   ├── errors/
+│   ├── maps/           # Google Maps / OpenRouteService integration
+│   ├── navigation/
+│   ├── network/
+│   ├── routes/
+│   ├── theme/
+│   ├── usecases/
+│   ├── utils/
+│   ├── video/          # video consultation support
+│   └── widgets/        # shared/reusable widgets
 ├── features/
 │   ├── appointments/
 │   ├── auth/
@@ -62,18 +75,10 @@ lib/
 │   ├── screening/
 │   ├── settings/
 │   └── support/
-├── navigation/
-├── network/
-├── routes/
-├── theme/
-├── usecases/
-├── utils/
-├── video/
-├── widgets/
 └── main.dart
 ```
 
-Dependency injection is handled through the core layer, with `flutter_bloc` providing blocs at the top level.
+Dependency injection is handled through `core/di`, with `flutter_bloc` providing blocs at the top level.
 
 ## UI Design
 
@@ -121,12 +126,11 @@ Security rules for Firestore are defined in `firestore.rules`.
 
 ## Author
 
-GROUP 11 — Software Engineering students, African Leadership University (ALU)
+Group 11 — Software Engineering students, African Leadership University (ALU)
 
 ---
 
 *EasyHelp is a summative software engineering project, under active development. Contributions and feedback are welcome as the platform expands toward a fuller caregiver support experience.*
-
 
 
 
