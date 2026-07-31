@@ -41,6 +41,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   }
 
   void _submit() {
+    debugPrint(
+      'SUBMIT TAPPED - current: ${_currentController.text.length} chars',
+    );
+
     final current = _currentController.text;
     final next = _newController.text;
     final confirm = _confirmController.text;

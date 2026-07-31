@@ -67,7 +67,26 @@ class AuthProfileUpdateRequested extends AuthEvent {
   });
 
   @override
-  List<Object?> get props => [name, mobile, gender, dateOfBirth, preferredLanguage];
+  List<Object?> get props => [
+    name,
+    mobile,
+    gender,
+    dateOfBirth,
+    preferredLanguage,
+  ];
+}
+
+class AuthChangePasswordRequested extends AuthEvent {
+  final String currentPassword;
+  final String newPassword;
+
+  const AuthChangePasswordRequested({
+    required this.currentPassword,
+    required this.newPassword,
+  });
+
+  @override
+  List<Object?> get props => [currentPassword, newPassword];
 }
 
 class AuthLinkGoogleRequested extends AuthEvent {
