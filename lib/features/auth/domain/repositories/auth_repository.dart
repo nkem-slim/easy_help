@@ -19,20 +19,5 @@ abstract class AuthRepository {
 
   Future<Either<Failure, void>> logout();
 
-  Future<Either<Failure, UserEntity>> updateProfile({
-    required String name,
-    String? mobile,
-    String? gender,
-    DateTime? dateOfBirth,
-    String? preferredLanguage,
-  });
-
-  Future<Either<Failure, void>> changePassword({
-    required String currentPassword,
-    required String newPassword,
-  });
-
-  Future<Either<Failure, UserEntity>> linkGoogleAccount();
-
   Stream<UserEntity?> get authStateChanges;
 }
