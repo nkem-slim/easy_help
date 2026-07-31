@@ -43,8 +43,8 @@ class _SplashPageState extends State<SplashPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset(
-                  'assets/images/easy_help_logo.png',
+                Image.network(
+                  'https://www.image2url.com/r2/default/images/1784839253510-1e0b14dc-cdc1-4682-9eaf-1c8a3b97a95e.png',
                   width: 90,
                   height: 90,
                 ),
