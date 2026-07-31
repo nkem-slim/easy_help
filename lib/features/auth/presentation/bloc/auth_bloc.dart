@@ -14,6 +14,19 @@ import '../../domain/usecases/link_google_account_usecase.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 
+class AuthPasswordChangeRequested extends AuthEvent {
+  final String currentPassword;
+  final String newPassword;
+
+  const AuthPasswordChangeRequested({
+    required this.currentPassword,
+    required this.newPassword,
+  });
+
+  @override
+  List<Object?> get props => [currentPassword, newPassword];
+}
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUseCase loginUseCase;
   final RegisterUseCase registerUseCase;
@@ -40,6 +53,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLogoutRequested>(_onLogoutRequested);
     on<AuthUserChanged>(_onUserChanged);
     on<AuthProfileUpdateRequested>(_onProfileUpdateRequested);
+    on<AuthEvent>((event, emit) async {
+      if (event is AuthPasswordChangeRequested) {
+        await _onPasswordChangeRequested(event, emit);
+      }
+    });
+
+    on<AuthPasswordChangeRequested>(_onPasswordChangeRequested);
+
     on<AuthLinkGoogleRequested>(_onLinkGoogleRequested);
 
     _authSubscription = authRepository.authStateChanges.listen(
@@ -125,6 +146,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) => emit(AuthFailureState(failure.message)),
       (user) => emit(AuthAuthenticated(user)),
+    );
+  }
+
+  Future<void> _onPasswordChangeRequested(
+    AuthPasswordChangeRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading());
+    final result = await changePasswordUseCase(
+      ChangePasswordParams(
+        currentPassword: event.currentPassword,
+        newPassword: event.newPassword,
+      ),
+    );
+    result.fold(
+      (failure) => emit(AuthFailureState(failure.message)),
+      (_) => emit(const AuthPasswordChangeSuccess()),
     );
   }
 
