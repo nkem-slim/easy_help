@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/fallback_image.dart';
 
 /// Green header block: screen title, avatar with camera button, and the name.
 ///
-/// [imagePath] is an asset path. While it is null the Easy Help logo (the
-/// same asset used on the splash screen) is drawn instead, so the screen
-/// still renders before the real photo is added to `assets/images/`.
+/// [imagePath] is a network URL or local asset path. Whenever it's null,
+/// empty, or fails to load, the Easy Help logo (the same asset shown on the
+/// splash screen) is drawn instead — see [FallbackImage].
 class ProfileHeader extends StatelessWidget {
   final String name;
   final String? email;
@@ -59,11 +60,11 @@ class ProfileHeader extends StatelessWidget {
               Center(
                 child: Stack(
                   children: [
-                    CircleAvatar(
-                      radius: 56,
-                      backgroundColor: Colors.white,
-                      backgroundImage: AssetImage(
-                        imagePath ?? 'assets/images/easy_help_logo.png',
+                    ClipOval(
+                      child: SizedBox(
+                        width: 112,
+                        height: 112,
+                        child: FallbackImage(imagePath: imagePath),
                       ),
                     ),
                     Positioned(

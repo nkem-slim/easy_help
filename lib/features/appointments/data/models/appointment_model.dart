@@ -27,7 +27,7 @@ class AppointmentModel extends AppointmentEntity {
       doctorId: map['doctorId'],
       doctorName: map['doctorName'],
       doctorSpecialty: map['doctorSpecialty'],
-      doctorImageUrl: map['doctorImageUrl'],
+      doctorImageUrl: map['doctorImageUrl'] ?? '',
       patientName: map['patientName'],
       contactNumber: map['contactNumber'],
       relationship: map['relationship'],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/utils/image_provider_utils.dart';
+import '../../../../core/widgets/fallback_image.dart';
 
 class DoctorSummaryCard extends StatelessWidget {
   final String name;
@@ -37,20 +37,11 @@ class DoctorSummaryCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image(
-                  image: resolveImageProvider(imageUrl),
+                child: FallbackImage(
+                  imagePath: imageUrl,
                   width: 64,
                   height: 64,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    width: 64,
-                    height: 64,
-                    color: AppColors.primary.withValues(alpha: 0.12),
-                    child: const Icon(
-                      Icons.person_rounded,
-                      color: AppColors.primary,
-                    ),
-                  ),
                 ),
               ),
               const SizedBox(width: 12),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_strings.dart';
+import '../../../../../core/widgets/fallback_image.dart';
 import '../../../clinics/data/mock_clinics.dart';
 import '../../../clinics/presentation/pages/clinic_details_page.dart';
 
@@ -93,8 +94,8 @@ class _ClinicCard extends StatelessWidget {
                 topLeft: Radius.circular(14),
                 topRight: Radius.circular(14),
               ),
-              child: Image.asset(
-                item.imageAsset,
+              child: FallbackImage(
+                imagePath: item.imageAsset,
                 height: 70,
                 width: double.infinity,
                 fit: BoxFit.cover,

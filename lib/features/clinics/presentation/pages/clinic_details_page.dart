@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/widgets/fallback_image.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../domain/entities/clinic_entity.dart';
 
@@ -44,8 +45,8 @@ class ClinicDetailsPage extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: ClipOval(
-                  child: Image.asset(
-                    clinic.imageAsset,
+                  child: FallbackImage(
+                    imagePath: clinic.imageAsset,
                     width: 100,
                     height: 100,
                     fit: BoxFit.cover,

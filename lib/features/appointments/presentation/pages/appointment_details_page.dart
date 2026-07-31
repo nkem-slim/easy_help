@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/utils/image_provider_utils.dart';
+import '../../../../core/widgets/fallback_image.dart';
 import '../../domain/entities/appointment_entity.dart';
 import '../bloc/appointment_bloc.dart';
 
@@ -175,9 +175,12 @@ class _AppointmentDetailsPageState extends State<AppointmentDetailsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Center(
-          child: CircleAvatar(
-            radius: 44,
-            backgroundImage: resolveImageProvider(_appointment.doctorImageUrl),
+          child: ClipOval(
+            child: SizedBox(
+              width: 88,
+              height: 88,
+              child: FallbackImage(imagePath: _appointment.doctorImageUrl),
+            ),
           ),
         ),
         const SizedBox(height: 12),

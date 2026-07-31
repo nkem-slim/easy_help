@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/fallback_image.dart';
 import 'doctor_card.dart';
 
 class DoctorDetailsCard extends StatelessWidget {
@@ -38,8 +39,8 @@ class DoctorDetailsCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  doctor.imageAsset,
+                child: FallbackImage(
+                  imagePath: doctor.imageAsset,
                   width: 64,
                   height: 64,
                   fit: BoxFit.cover,

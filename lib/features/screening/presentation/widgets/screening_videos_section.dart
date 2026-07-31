@@ -5,6 +5,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/video/youtube_player_page.dart';
+import '../../../../core/widgets/fallback_image.dart';
 
 // TODO: each fallback card should link to its own video once real per-topic
 // recordings exist — both point at the same placeholder for now.
@@ -30,13 +31,13 @@ final List<_VideoResource> _placeholderVideos = [
   _VideoResource(
     title: 'Nurturing Growth At Home',
     subtitle: 'Milestones for 18-24 months',
-    imageAsset: 'assets/images/boy-1.png',
+    imageAsset: '',
     videoId: _placeholderVideoId,
   ),
   _VideoResource(
     title: 'Language Milestones',
     subtitle: 'Encouraging early communication',
-    imageAsset: 'assets/images/human-image.jpg',
+    imageAsset: '',
     videoId: _placeholderVideoId,
   ),
 ];
@@ -61,7 +62,7 @@ class ScreeningVideosSection extends StatelessWidget {
       return _VideoResource(
         title: data['title'] as String? ?? 'Untitled',
         subtitle: data['subtitle'] as String? ?? '',
-        imageAsset: data['imageAsset'] as String? ?? 'assets/images/boy-1.png',
+        imageAsset: data['imageAsset'] as String? ?? '',
         videoId: data['videoId'] as String? ?? _placeholderVideoId,
       );
     }).toList();
@@ -137,7 +138,7 @@ class _VideoCard extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Image.asset(item.imageAsset, fit: BoxFit.cover),
+              FallbackImage(imagePath: item.imageAsset, fit: BoxFit.cover),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
