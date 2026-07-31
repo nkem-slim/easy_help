@@ -17,9 +17,26 @@ class _BookedAppointmentsPageState extends State<BookedAppointmentsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<AppointmentBloc>().add(
-      AppointmentLoadRequested(widget.patientId),
-    );
+    if (widget.patientId.isNotEmpty) {
+      context.read<AppointmentBloc>().add(
+        AppointmentLoadRequested(widget.patientId),
+      );
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant BookedAppointmentsPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Auth resolves asynchronously, so this page can first mount with an
+    // empty patientId before AuthBloc emits AuthAuthenticated. IndexedStack
+    // keeps this State alive across that change, so initState alone would
+    // miss the real id — reload once it (or a different signed-in user) shows up.
+    if (widget.patientId != oldWidget.patientId &&
+        widget.patientId.isNotEmpty) {
+      context.read<AppointmentBloc>().add(
+        AppointmentLoadRequested(widget.patientId),
+      );
+    }
   }
 
   void _startBooking(BuildContext context) {
@@ -46,8 +63,13 @@ class _BookedAppointmentsPageState extends State<BookedAppointmentsPage> {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
               itemCount: state.appointments.length,
               separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) =>
-                  AppointmentCard(appointment: state.appointments[index]),
+              itemBuilder: (context, index) => AppointmentCard(
+                appointment: state.appointments[index],
+                onTap: () => Navigator.of(context).pushNamed(
+                  AppRoutes.appointmentDetails,
+                  arguments: state.appointments[index],
+                ),
+              ),
             );
           }
           return const SizedBox.shrink();

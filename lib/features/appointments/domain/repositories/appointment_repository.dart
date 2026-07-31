@@ -10,4 +10,8 @@ abstract class AppointmentRepository {
     AppointmentEntity appointment,
   );
   Future<Either<Failure, void>> cancelAppointment(String appointmentId);
+  Future<Either<Failure, AppointmentEntity>> updateAppointment(
+    AppointmentEntity appointment,
+  );
+  Future<Either<Failure, void>> deleteAppointment(String appointmentId);
 }

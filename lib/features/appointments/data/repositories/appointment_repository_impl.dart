@@ -59,4 +59,33 @@ class AppointmentRepositoryImpl implements AppointmentRepository {
       return const Left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, AppointmentEntity>> updateAppointment(
+    AppointmentEntity appointment,
+  ) async {
+    if (!await networkInfo.isConnected) return const Left(NetworkFailure());
+    try {
+      final model = AppointmentModel.fromEntity(appointment);
+      final updated = await remoteDataSource.updateAppointment(model);
+      return Right(updated);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (_) {
+      return const Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteAppointment(String appointmentId) async {
+    if (!await networkInfo.isConnected) return const Left(NetworkFailure());
+    try {
+      await remoteDataSource.deleteAppointment(appointmentId);
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (_) {
+      return const Left(ServerFailure());
+    }
+  }
 }

@@ -15,12 +15,13 @@ import '../../features/auth/domain/usecases/register_usecase.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 
 import '../../features/appointments/data/datasources/appointment_remote_data_source.dart';
-import '../../features/appointments/data/models/appointment_model.dart';
 import '../../features/appointments/data/repositories/appointment_repository_impl.dart';
 import '../../features/appointments/domain/repositories/appointment_repository.dart';
 import '../../features/appointments/domain/usecases/book_appointment_usecase.dart';
 import '../../features/appointments/domain/usecases/cancel_appointment_usecase.dart';
+import '../../features/appointments/domain/usecases/delete_appointment_usecase.dart';
 import '../../features/appointments/domain/usecases/get_booked_appointments_usecase.dart';
+import '../../features/appointments/domain/usecases/update_appointment_usecase.dart';
 import '../../features/appointments/presentation/bloc/appointment_bloc.dart';
 
 import '../../features/screening/data/datasources/screening_remote_data_source.dart';
@@ -31,43 +32,6 @@ import '../../features/screening/domain/usecases/submit_screening_usecase.dart';
 import '../../features/screening/presentation/bloc/screening_bloc.dart';
 
 final GetIt sl = GetIt.instance;
-
-// TODO: remove stub and uncomment Firebase registrations when Firebase is configured
-class _AppointmentRemoteDataSourceStub implements AppointmentRemoteDataSource {
-  final List<AppointmentModel> _fakeAppointments = [
-    AppointmentModel(
-      id: '1',
-      patientId: 'test-patient',
-      doctorId: 'doc-1',
-      doctorName: 'Dr. Nshuti',
-      doctorSpecialty: 'Pediatrician',
-      doctorImageUrl: 'https://i.pravatar.cc/150?img=12',
-      patientName: 'Uwineza',
-      contactNumber: '0788000000',
-      relationship: 'Mother',
-      date: DateTime.now().add(const Duration(days: 3)),
-      timeSlot: '10:00 AM',
-      reminderMinutesBefore: 30,
-      status: 'upcoming',
-    ),
-  ];
-
-  @override
-  Future<AppointmentModel> bookAppointment(AppointmentModel appointment) async {
-    _fakeAppointments.add(appointment);
-    return appointment;
-  }
-
-  @override
-  Future<List<AppointmentModel>> getBookedAppointments(String patientId) async {
-    return _fakeAppointments;
-  }
-
-  @override
-  Future<void> cancelAppointment(String appointmentId) async {
-    _fakeAppointments.removeWhere((a) => a.id == appointmentId);
-  }
-}
 
 // TODO: remove stub and uncomment Firebase registrations when Firebase is configured
 class _ScreeningRemoteDataSourceStub implements ScreeningRemoteDataSource {
@@ -127,9 +91,7 @@ void _initAuth() {
 
 void _initAppointments() {
   sl.registerLazySingleton<AppointmentRemoteDataSource>(
-    // TODO: swap stub for real impl when Firebase is configured
-    () => _AppointmentRemoteDataSourceStub(),
-    // () => AppointmentRemoteDataSourceImpl(firestore: sl()),
+    () => AppointmentRemoteDataSourceImpl(firestore: sl()),
   );
 
   sl.registerLazySingleton<AppointmentRepository>(
@@ -139,12 +101,16 @@ void _initAppointments() {
   sl.registerLazySingleton(() => BookAppointmentUsecase(sl()));
   sl.registerLazySingleton(() => GetBookedAppointmentsUsecase(sl()));
   sl.registerLazySingleton(() => CancelAppointmentUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateAppointmentUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteAppointmentUseCase(sl()));
 
   sl.registerFactory(
     () => AppointmentBloc(
       bookAppointmentUsecase: sl(),
       getBookedAppointmentsUsecase: sl(),
       cancelAppointmentUseCase: sl(),
+      updateAppointmentUseCase: sl(),
+      deleteAppointmentUseCase: sl(),
     ),
   );
 }

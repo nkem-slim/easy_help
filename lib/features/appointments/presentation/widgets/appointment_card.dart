@@ -5,7 +5,8 @@ import '../../domain/entities/appointment_entity.dart';
 
 class AppointmentCard extends StatelessWidget {
   final AppointmentEntity appointment;
-  const AppointmentCard({super.key, required this.appointment});
+  final VoidCallback? onTap;
+  const AppointmentCard({super.key, required this.appointment, this.onTap});
 
   Color get _statusColor {
     switch (appointment.status) {
@@ -20,6 +21,10 @@ class AppointmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return GestureDetector(onTap: onTap, child: _buildCard());
+  }
+
+  Widget _buildCard() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
