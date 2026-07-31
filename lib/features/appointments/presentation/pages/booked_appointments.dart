@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../bloc/appointment_bloc.dart';
@@ -18,11 +17,6 @@ class _BookedAppointmentsPageState extends State<BookedAppointmentsPage> {
   @override
   void initState() {
     super.initState();
-
-    debugPrint("Firebase user: ${FirebaseAuth.instance.currentUser?.uid}");
-
-    debugPrint("Widget patientId: ${widget.patientId}");
-
     if (widget.patientId.isNotEmpty) {
       context.read<AppointmentBloc>().add(
         AppointmentLoadRequested(widget.patientId),
@@ -33,13 +27,12 @@ class _BookedAppointmentsPageState extends State<BookedAppointmentsPage> {
   @override
   void didUpdateWidget(covariant BookedAppointmentsPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.patientId != widget.patientId &&
+    // Auth resolves asynchronously, so this page can first mount with an
+    // empty patientId before AuthBloc emits AuthAuthenticated. IndexedStack
+    // keeps this State alive across that change, so initState alone would
+    // miss the real id — reload once it (or a different signed-in user) shows up.
+    if (widget.patientId != oldWidget.patientId &&
         widget.patientId.isNotEmpty) {
-      debugPrint(
-        'BookedAppointmentsPage updated patientId: "${widget.patientId}"',
-      );
-
       context.read<AppointmentBloc>().add(
         AppointmentLoadRequested(widget.patientId),
       );
@@ -53,68 +46,34 @@ class _BookedAppointmentsPageState extends State<BookedAppointmentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
-              decoration: const BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(28),
-                  bottomRight: Radius.circular(28),
+      appBar: AppBar(title: const Text('My Booked Appointments')),
+      body: BlocBuilder<AppointmentBloc, AppointmentState>(
+        builder: (context, state) {
+          if (state is AppointmentLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is AppointmentFailure) {
+            return Center(child: Text(state.message));
+          }
+          if (state is AppointmentLoaded) {
+            if (state.appointments.isEmpty) {
+              return _EmptyState(onBookNow: () => _startBooking(context));
+            }
+            return ListView.separated(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
+              itemCount: state.appointments.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (context, index) => AppointmentCard(
+                appointment: state.appointments[index],
+                onTap: () => Navigator.of(context).pushNamed(
+                  AppRoutes.appointmentDetails,
+                  arguments: state.appointments[index],
                 ),
               ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'My Booked Appointments',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Keep track of your upcoming visits',
-                    style: TextStyle(color: Colors.white70, fontSize: 13),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: BlocBuilder<AppointmentBloc, AppointmentState>(
-                builder: (context, state) {
-                  if (state is AppointmentLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (state is AppointmentFailure) {
-                    return Center(child: Text(state.message));
-                  }
-                  if (state is AppointmentLoaded) {
-                    if (state.appointments.isEmpty) {
-                      return _EmptyState(
-                        onBookNow: () => _startBooking(context),
-                      );
-                    }
-                    return ListView.separated(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
-                      itemCount: state.appointments.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
-                      itemBuilder: (context, index) => AppointmentCard(
-                        appointment: state.appointments[index],
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
-            ),
-          ],
-        ),
+            );
+          }
+          return const SizedBox.shrink();
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _startBooking(context),
@@ -146,12 +105,13 @@ class _EmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              'No appointments',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              "You haven't booked any appointment yet",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             const Text(
-              'Book your first checkup to see it here',
+              'Get started with your first checkup',
               style: TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 24),

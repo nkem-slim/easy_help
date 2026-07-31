@@ -4,10 +4,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../clinics/data/mock_clinics.dart';
+import '../../../clinics/presentation/pages/clinic_details_page.dart';
 import '../widgets/doctor_card.dart';
 import '../widgets/find_clinic_header.dart';
 import '../widgets/find_clinic_search_bar.dart';
-import 'doctor_details_page.dart';
+
+/// Maps a clinic onto the doctor card's fields, so the Find a Clinic page
+/// keeps its existing card design without duplicating that layout.
+DoctorItem _asCardItem(ClinicItem clinic) {
+  return DoctorItem(
+    name: clinic.name,
+    specialty: clinic.subtitle,
+    experience: clinic.distanceLabel,
+    ratingPercent: '${(clinic.rating * 20).round()}%',
+    patientStories: clinic.isOpenNow ? 'Open now' : 'Closed now',
+    clinicName: clinic.location,
+    availability: clinic.isVerified ? 'Verified partner' : 'Community clinic',
+    location: clinic.location,
+    imageAsset: clinic.imageAsset,
+  );
+}
 
 class FindClinicPage extends StatefulWidget {
   const FindClinicPage({super.key});
@@ -20,19 +37,33 @@ class _FindClinicPageState extends State<FindClinicPage> {
   final _searchController = TextEditingController(text: '');
   String _query = 'Kigali';
 
-  // TODO(support-data-layer): replace with a real doctor list once a
-  // DoctorRepository exists — all 3 currently point at the same mock doctor.
-  static const _doctors = [mockDrNshunti, mockDrNshunti, mockDrNshunti];
+  static const _maxClinics = 6;
+  static const _clinics = mockClinics;
 
-  List<DoctorItem> get _filteredDoctors {
+  List<ClinicItem> get _filteredClinics {
     final query = _query.trim().toLowerCase();
-    if (query.isEmpty) return _doctors;
-    return _doctors.where((doctor) {
-      return doctor.name.toLowerCase().contains(query) ||
-          doctor.specialty.toLowerCase().contains(query) ||
-          doctor.clinicName.toLowerCase().contains(query) ||
-          doctor.location.toLowerCase().contains(query);
+    final source = _clinics.take(_maxClinics);
+    if (query.isEmpty) return source.toList();
+    return source.where((clinic) {
+      return clinic.name.toLowerCase().contains(query) ||
+          clinic.subtitle.toLowerCase().contains(query) ||
+          clinic.location.toLowerCase().contains(query);
     }).toList();
+  }
+
+  void _bookAppointment(BuildContext context, ClinicItem clinic) {
+    final authState = context.read<AuthBloc>().state;
+    final patientId = authState is AuthAuthenticated ? authState.user.id : '';
+    Navigator.of(context).pushNamed(
+      AppRoutes.appointmentFor,
+      arguments: {
+        'doctorId': clinic.id,
+        'doctorName': clinic.name,
+        'doctorSpecialty': clinic.location,
+        'doctorImageUrl': clinic.imageAsset,
+        'patientId': patientId,
+      },
+    );
   }
 
   @override
@@ -57,42 +88,21 @@ class _FindClinicPageState extends State<FindClinicPage> {
             Expanded(
               child: ListView.separated(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                itemCount: _filteredDoctors.length,
+                itemCount: _filteredClinics.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 14),
                 itemBuilder: (context, index) {
-                  final doctor = _filteredDoctors[index];
-                  void openDetails() {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (detailsContext) => DoctorDetailsPage(
-                          doctor: doctor,
-                          onBookNow: () {
-                            final authState = detailsContext
-                                .read<AuthBloc>()
-                                .state;
-                            final patientId = authState is AuthAuthenticated
-                                ? authState.user.id
-                                : '';
-                            Navigator.of(detailsContext).pushNamed(
-                              AppRoutes.appointmentFor,
-                              arguments: {
-                                'doctorId': mockDoctorId,
-                                'doctorName': doctor.name,
-                                'doctorSpecialty': doctor.specialty,
-                                'doctorImageUrl': mockDoctorNetworkImageUrl,
-                                'patientId': patientId,
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  }
+                  final clinic = _filteredClinics[index];
+                  void openDetails() => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          ClinicDetailsPage(clinic: clinic.toEntity()),
+                    ),
+                  );
 
                   return DoctorCard(
-                    item: doctor,
+                    item: _asCardItem(clinic),
                     onTap: openDetails,
-                    onBookNow: openDetails,
+                    onBookNow: () => _bookAppointment(context, clinic),
                   );
                 },
               ),

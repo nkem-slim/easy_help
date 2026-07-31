@@ -38,3 +38,15 @@ class AppointmentFailure extends AppointmentState {
   @override
   List<Object?> get props => [message];
 }
+
+class AppointmentUpdated extends AppointmentState {
+  final AppointmentEntity appointment;
+  const AppointmentUpdated(this.appointment);
+
+  @override
+  List<Object?> get props => [appointment];
+}
+
+class AppointmentDeleted extends AppointmentState {
+  const AppointmentDeleted();
+}
