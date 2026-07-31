@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
-import '../widgets/language_picker_sheet.dart';
 import '../widgets/logout_confirm_dialog.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_icon_badge.dart';
@@ -19,6 +18,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  // TODO: read/write these through a settings repository (shared_preferences)
+  // once the profile feature has a data layer. Local-only for now.
   bool _notifications = true;
   bool _textMessages = true;
   bool _phoneCalls = true;
@@ -26,7 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void _comingSoon(String label) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('$label coming soon'),
+        content: Text('$label — coming soon'),
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -34,37 +35,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _logout() async {
     final confirmed = await showLogoutConfirmDialog(context);
+    // The dialog resolves to null when dismissed by tapping outside it, and the
+    // widget may be gone by the time the await returns.
     if (confirmed != true || !mounted) return;
 
     context.read<AuthBloc>().add(const AuthLogoutRequested());
+    // Drop every route below login so back cannot return to the signed-in app.
     Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (_) => false);
-  }
-
-  Future<void> _pickLanguage() async {
-    final authState = context.read<AuthBloc>().state;
-    final user = authState is AuthAuthenticated ? authState.user : null;
-    if (user == null) return;
-
-    final selected = await showLanguagePicker(
-      context,
-      user.preferredLanguage ?? 'English',
-    );
-    if (selected == null || selected == user.preferredLanguage || !mounted)
-      return;
-
-    context.read<AuthBloc>().add(
-      AuthProfileUpdateRequested(
-        name: user.name,
-        mobile: user.mobile,
-        gender: user.gender,
-        dateOfBirth: user.dateOfBirth,
-        preferredLanguage: selected,
-      ),
-    );
-  }
-
-  void _linkGoogle() {
-    context.read<AuthBloc>().add(const AuthLinkGoogleRequested());
   }
 
   Widget _switch(bool value, ValueChanged<bool> onChanged) {
@@ -92,29 +69,13 @@ class _ProfilePageState extends State<ProfilePage> {
               role: user?.role,
               onCameraTap: () => _comingSoon('Change photo'),
             ),
-          );
-        }
-      },
-      child: Scaffold(
-        backgroundColor: AppColors.background,
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ProfileHeader(
-                name: user?.name ?? 'Guest',
-                onCameraTap: () => _comingSoon('Change photo'),
-              ),
 
-              const ProfileSectionTitle('Account settings'),
-              ProfileTile(
-                title: 'Change Password',
-                leading: const ProfileIconBadge(
-                  icon: Icons.lock_rounded,
-                  color: AppColors.badgeRed,
-                ),
-                onTap: () =>
-                    Navigator.pushNamed(context, AppRoutes.changePassword),
+            const ProfileSectionTitle('Account settings'),
+            ProfileTile(
+              title: 'Change Password',
+              leading: const ProfileIconBadge(
+                icon: Icons.lock_rounded,
+                color: AppColors.badgeRed,
               ),
               onTap: () => _comingSoon('Change Password'),
             ),
@@ -130,45 +91,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 icon: Icons.notifications_rounded,
                 color: AppColors.badgeGreen,
               ),
-              ProfileTile(
-                title: 'Notifications',
-                leading: const ProfileIconBadge(
-                  icon: Icons.notifications_rounded,
-                  color: AppColors.badgeGreen,
-                ),
-                trailing: _switch(
-                  _notifications,
-                  (v) => setState(() => _notifications = v),
-                ),
-              ),
-              const Divider(
-                height: 1,
-                color: AppColors.divider,
-                indent: 20,
-                endIndent: 20,
-              ),
-              ProfileTile(
-                title: 'Edit Profile',
-                leading: const ProfileIconBadge(
-                  icon: Icons.edit_rounded,
-                  color: AppColors.badgeBlue,
-                ),
-                onTap: () =>
-                    Navigator.pushNamed(context, AppRoutes.userDetails),
-              ),
-              const Divider(
-                height: 1,
-                color: AppColors.divider,
-                indent: 20,
-                endIndent: 20,
-              ),
-              ProfileTile(
-                title: 'About us',
-                leading: const ProfileIconBadge(
-                  icon: Icons.people_rounded,
-                  color: AppColors.badgeOrange,
-                ),
-                onTap: () => Navigator.pushNamed(context, AppRoutes.aboutUs),
+              trailing: _switch(
+                _notifications,
+                (v) => setState(() => _notifications = v),
               ),
             ),
             const Divider(
@@ -200,13 +125,12 @@ class _ProfilePageState extends State<ProfilePage> {
               onTap: () => _comingSoon('About us'),
             ),
 
-              const ProfileSectionTitle('More options'),
-              ProfileTile(
-                title: 'Text messages',
-                trailing: _switch(
-                  _textMessages,
-                  (v) => setState(() => _textMessages = v),
-                ),
+            const ProfileSectionTitle('More options'),
+            ProfileTile(
+              title: 'Text messages',
+              trailing: _switch(
+                _textMessages,
+                (v) => setState(() => _textMessages = v),
               ),
             ),
             const Divider(
@@ -258,9 +182,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ProfileTile(title: 'Log Out', onTap: _logout),
 
-              const SizedBox(height: 24),
-            ],
-          ),
+            const SizedBox(height: 24),
+          ],
         ),
       ),
     );
