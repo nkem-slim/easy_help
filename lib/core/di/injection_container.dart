@@ -13,6 +13,9 @@ import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/register_usecase.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
+import '../../features/auth/domain/usecases/update_profile_usecase.dart';
+import '../../features/auth/domain/usecases/change_password_usecase.dart';
+import '../../features/auth/domain/usecases/link_google_account_usecase.dart';
 
 import '../../features/appointments/data/datasources/appointment_remote_data_source.dart';
 import '../../features/appointments/data/models/appointment_model.dart';
@@ -41,7 +44,7 @@ class _AppointmentRemoteDataSourceStub implements AppointmentRemoteDataSource {
       doctorId: 'doc-1',
       doctorName: 'Dr. Nshuti',
       doctorSpecialty: 'Pediatrician',
-      doctorImageUrl: 'assets/images/dr-nshuti.png',
+      doctorImageUrl: 'assets/images/dr_nshuti.png',
       patientName: 'Uwineza',
       contactNumber: '0788000000',
       relationship: 'Mother',
@@ -111,9 +114,13 @@ void _initAuth() {
     () => AuthRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
+  sl.registerLazySingleton(() => LinkGoogleAccountUseCase(sl()));
+
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateProfileUseCase(sl()));
+  sl.registerLazySingleton(() => ChangePasswordUseCase(sl()));
 
   sl.registerFactory(
     () => AuthBloc(
@@ -121,6 +128,9 @@ void _initAuth() {
       registerUseCase: sl(),
       logoutUseCase: sl(),
       authRepository: sl(),
+      updateProfileUseCase: sl(),
+      changePasswordUseCase: sl(),
+      linkGoogleAccountUseCase: sl(),
     ),
   );
 }

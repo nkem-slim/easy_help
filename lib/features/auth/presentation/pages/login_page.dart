@@ -184,20 +184,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-
-                      // Skip
-                      TextButton(
-                        onPressed: () => Navigator.of(
-                          context,
-                        ).pushReplacementNamed(AppRoutes.home),
-                        child: const Text(
-                          'Skip for now',
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
