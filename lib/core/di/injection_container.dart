@@ -12,6 +12,9 @@ import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/register_usecase.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
+import '../../features/auth/domain/usecases/update_profile_usecase.dart';
+import '../../features/auth/domain/usecases/change_password_usecase.dart';
+import '../../features/auth/domain/usecases/link_google_account_usecase.dart';
 import '../../features/auth/data/models/user_model.dart';
 
 import '../../features/appointments/data/datasources/appointment_remote_data_source.dart';
@@ -33,7 +36,7 @@ import '../../features/screening/presentation/bloc/screening_bloc.dart';
 final GetIt sl = GetIt.instance;
 
 // TODO: remove stub and uncomment Firebase registrations when Firebase is configured
-class _AuthRemoteDataSourceStub implements AuthRemoteDataSource {
+class _AuthRemoteDataSourceStub {
   @override
   Future<UserModel> loginWithEmail({
     required String email,
@@ -58,6 +61,11 @@ class _AuthRemoteDataSourceStub implements AuthRemoteDataSource {
 
   @override
   Stream<UserModel?> get authStateChanges => const Stream.empty();
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError('Firebase not yet initialized');
+  }
 }
 
 // TODO: remove stub and uncomment Firebase registrations when Firebase is configured
@@ -121,21 +129,25 @@ Future<void> initDependencies() async {
 void _initAuth() {
   sl.registerLazySingleton<AuthRemoteDataSource>(
     // TODO: swap stub for real impl when Firebase is configured
-    () => _AuthRemoteDataSourceStub(),
-    // () => AuthRemoteDataSourceImpl(
-    //   firebaseAuth: sl(),
-    //   firestore: sl(),
-    //   googleSignIn: sl(),
-    // ),
+    // () => _AuthRemoteDataSourceStub(),
+    () => AuthRemoteDataSourceImpl(
+      firebaseAuth: sl(),
+      firestore: sl(),
+      googleSignIn: sl(),
+    ),
   );
 
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(remoteDataSource: sl(), networkInfo: sl()),
   );
 
+  sl.registerLazySingleton(() => LinkGoogleAccountUseCase(sl()));
+
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateProfileUseCase(sl()));
+  sl.registerLazySingleton(() => ChangePasswordUseCase(sl()));
 
   sl.registerFactory(
     () => AuthBloc(
@@ -143,6 +155,9 @@ void _initAuth() {
       registerUseCase: sl(),
       logoutUseCase: sl(),
       authRepository: sl(),
+      updateProfileUseCase: sl(),
+      changePasswordUseCase: sl(),
+      linkGoogleAccountUseCase: sl(),
     ),
   );
 }
@@ -184,7 +199,5 @@ void _initScreening() {
 
   sl.registerLazySingleton(() => SubmitScreeningUseCase(sl()));
 
-  sl.registerFactory(
-    () => ScreeningBloc(submitScreeningUseCase: sl()),
-  );
+  sl.registerFactory(() => ScreeningBloc(submitScreeningUseCase: sl()));
 }

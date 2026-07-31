@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/soft_gradient_background.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../widgets/date_of_birth_selector.dart';
 import '../widgets/gender_selector.dart';
 import '../widgets/labeled_field.dart';
@@ -31,122 +33,171 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
   int? _year;
 
   @override
-  void dispose() {
-    // Controllers hold native resources and listeners; not disposing them leaks
-    // for as long as the app runs.
-    _nameController.dispose();
-    _mobileController.dispose();
-    _emailController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      final user = authState.user;
+      _nameController.text = user.name;
+      _emailController.text = user.email;
+      _mobileController.text = user.mobile ?? '';
+      if (user.gender != null) {
+        _gender = Gender.values.firstWhere(
+          (g) => g.label == user.gender,
+          orElse: () => Gender.male,
+        );
+      }
+      final dob = user.dateOfBirth;
+      if (dob != null) {
+        _day = dob.day;
+        _month = dob.month;
+        _year = dob.year;
+      }
+    }
   }
 
   void _onUpdate() {
-    // TODO: persist through a profile repository once one exists. Validation
-    // arrives with the Form wiring.
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Profile updated'),
-        behavior: SnackBarBehavior.floating,
+    final name = _nameController.text.trim();
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Name cannot be empty')));
+      return;
+    }
+
+    DateTime? dob;
+    if (_day != null && _month != null && _year != null) {
+      dob = DateTime(_year!, _month!, _day!);
+    }
+
+    context.read<AuthBloc>().add(
+      AuthProfileUpdateRequested(
+        name: name,
+        mobile: _mobileController.text.trim().isEmpty
+            ? null
+            : _mobileController.text.trim(),
+        gender: _gender.label,
+        dateOfBirth: dob,
       ),
     );
-    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          const SoftGradientBackground(),
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Row(
-                    children: [
-                      PageBackButton(),
-                      SizedBox(width: 16),
-                      Text(
-                        'User Details',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  _FormCard(
-                    children: [
-                      LabeledField(
-                        label: "User's Name",
-                        child: TextField(
-                          controller: _nameController,
-                          textCapitalization: TextCapitalization.words,
-                          decoration: const InputDecoration(
-                            hintText: 'Mommy Uwineza',
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthAuthenticated) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Profile updated'),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          Navigator.pop(context);
+        } else if (state is AuthFailureState) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            const SoftGradientBackground(),
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Row(
+                      children: [
+                        PageBackButton(),
+                        SizedBox(width: 16),
+                        Text(
+                          'User Details',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
                           ),
                         ),
-                      ),
-                      LabeledField(
-                        label: 'Age',
-                        child: DateOfBirthSelector(
-                          day: _day,
-                          month: _month,
-                          year: _year,
-                          onDayChanged: (value) => setState(() => _day = value),
-                          onMonthChanged: (value) =>
-                              setState(() => _month = value),
-                          onYearChanged: (value) =>
-                              setState(() => _year = value),
-                        ),
-                      ),
-                      LabeledField(
-                        label: 'Gender',
-                        child: GenderSelector(
-                          value: _gender,
-                          onChanged: (value) =>
-                              setState(() => _gender = value),
-                        ),
-                      ),
-                      LabeledField(
-                        label: 'Mobile Number',
-                        child: TextField(
-                          controller: _mobileController,
-                          keyboardType: TextInputType.phone,
-                          decoration: const InputDecoration(
-                            hintText: '250795019913',
-                          ),
-                        ),
-                      ),
-                      LabeledField(
-                        label: 'Email',
-                        child: TextField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            hintText: 'uwineza01@gmail.com',
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: _onUpdate,
-                    child: const Text(
-                      'Update',
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                      ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 24),
+                    _FormCard(
+                      children: [
+                        LabeledField(
+                          label: "User's Name",
+                          child: TextField(
+                            controller: _nameController,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: const InputDecoration(
+                              hintText: 'Mommy Uwineza',
+                            ),
+                          ),
+                        ),
+                        LabeledField(
+                          label: 'Age',
+                          child: DateOfBirthSelector(
+                            day: _day,
+                            month: _month,
+                            year: _year,
+                            onDayChanged: (value) =>
+                                setState(() => _day = value),
+                            onMonthChanged: (value) =>
+                                setState(() => _month = value),
+                            onYearChanged: (value) =>
+                                setState(() => _year = value),
+                          ),
+                        ),
+                        LabeledField(
+                          label: 'Gender',
+                          child: GenderSelector(
+                            value: _gender,
+                            onChanged: (value) =>
+                                setState(() => _gender = value),
+                          ),
+                        ),
+                        LabeledField(
+                          label: 'Mobile Number',
+                          child: TextField(
+                            controller: _mobileController,
+                            keyboardType: TextInputType.phone,
+                            decoration: const InputDecoration(
+                              hintText: '250795019913',
+                            ),
+                          ),
+                        ),
+                        LabeledField(
+                          label: 'Email',
+                          child: TextField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: const InputDecoration(
+                              hintText: 'uwineza01@gmail.com',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                      onPressed: _onUpdate,
+                      child: const Text(
+                        'Update',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

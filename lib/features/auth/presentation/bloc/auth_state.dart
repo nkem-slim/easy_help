@@ -36,3 +36,11 @@ class AuthFailureState extends AuthState {
   @override
   List<Object?> get props => [message];
 }
+
+class AuthPasswordChangeSuccess extends AuthState {
+  const AuthPasswordChangeSuccess();
+}
+
+class AuthGoogleLinkSuccess extends AuthState {
+  const AuthGoogleLinkSuccess();
+}

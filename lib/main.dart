@@ -23,17 +23,20 @@ Future<void> main() async {
 
   await di.initDependencies();
 
-  runApp(const EasyHelpApp());
+  final authBloc = di.sl<AuthBloc>();
+
+  runApp(EasyHelpApp(authBloc: authBloc));
 }
 
 class EasyHelpApp extends StatelessWidget {
-  const EasyHelpApp({super.key});
+  final AuthBloc authBloc;
+  const EasyHelpApp({super.key, required this.authBloc});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthBloc>(create: (_) => di.sl<AuthBloc>()),
+        BlocProvider<AuthBloc>.value(value: authBloc),
         BlocProvider<AppointmentBloc>(create: (_) => di.sl<AppointmentBloc>()),
       ],
       child: MaterialApp(
@@ -41,7 +44,7 @@ class EasyHelpApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
         initialRoute: AppRoutes.splash,
-        onGenerateRoute: AppRouter.onGenerateRoute,
+        onGenerateRoute: AppRouter(authBloc: authBloc).onGenerateRoute,
       ),
     );
   }

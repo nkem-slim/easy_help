@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/app_strings.dart';
+import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/onboarding_page.dart';
 import '../../features/auth/presentation/pages/signup_page.dart';
@@ -7,7 +8,9 @@ import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/home/presentation/pages/main_shell.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/profile/presentation/pages/user_details_page.dart';
+import '../../features/profile/presentation/pages/about_us_page.dart';
 import '../../features/profile/presentation/pages/privacy_policy_page.dart';
+import '../../features/profile/presentation/pages/change_password_page.dart';
 import '../../features/appointments/presentation/pages/appointment_confirmation.dart';
 import '../../features/appointments/presentation/pages/book_appointment.dart';
 import '../../features/appointments/domain/entities/appointment_entity.dart';
@@ -21,9 +24,10 @@ import '../../features/screening/presentation/pages/screening_result_page.dart';
 import '../../features/screening/presentation/pages/take_test_page.dart';
 
 class AppRouter {
-  AppRouter._();
+  final AuthBloc authBloc;
+  AppRouter({required this.authBloc});
 
-  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+  Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.splash:
         return MaterialPageRoute(builder: (_) => const SplashPage());
@@ -34,6 +38,10 @@ class AppRouter {
       case AppRoutes.signup:
         return MaterialPageRoute(builder: (_) => const SignupPage());
       case AppRoutes.home:
+        final isAuthenticated = authBloc.state is AuthAuthenticated;
+        if (!isAuthenticated) {
+          return MaterialPageRoute(builder: (_) => const LoginPage());
+        }
         return MaterialPageRoute(builder: (_) => const MainShell());
       case AppRoutes.profile:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
@@ -49,10 +57,9 @@ class AppRouter {
             // Same mock doctor as FindClinicPage, so this route and the push
             // from the doctor list show identical details.
             doctor: mockDrNshunti,
-            onBookNow: () => Navigator.of(routeContext).pushNamed(
-              AppRoutes.appointmentFor,
-              arguments: args,
-            ),
+            onBookNow: () => Navigator.of(
+              routeContext,
+            ).pushNamed(AppRoutes.appointmentFor, arguments: args),
           ),
         );
 
@@ -99,6 +106,10 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => ScreeningResultPage(result: result),
         );
+      case AppRoutes.changePassword:
+        return MaterialPageRoute(builder: (_) => const ChangePasswordPage());
+      case AppRoutes.aboutUs:
+        return MaterialPageRoute(builder: (_) => const AboutUsPage());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
