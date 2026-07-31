@@ -79,7 +79,12 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               onTap: () => _comingSoon('Change Password'),
             ),
-            const Divider(height: 1, color: AppColors.divider, indent: 20, endIndent: 20),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
             ProfileTile(
               title: 'Notifications',
               leading: const ProfileIconBadge(
@@ -91,7 +96,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 (v) => setState(() => _notifications = v),
               ),
             ),
-            const Divider(height: 1, color: AppColors.divider, indent: 20, endIndent: 20),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
             ProfileTile(
               title: 'Edit Profile',
               leading: const ProfileIconBadge(
@@ -100,7 +110,12 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               onTap: () => Navigator.pushNamed(context, AppRoutes.userDetails),
             ),
-            const Divider(height: 1, color: AppColors.divider, indent: 20, endIndent: 20),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
             ProfileTile(
               title: 'About us',
               leading: const ProfileIconBadge(
@@ -118,7 +133,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 (v) => setState(() => _textMessages = v),
               ),
             ),
-            const Divider(height: 1, color: AppColors.divider, indent: 20, endIndent: 20),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
             ProfileTile(
               title: 'Phone calls',
               trailing: _switch(
@@ -126,29 +146,41 @@ class _ProfilePageState extends State<ProfilePage> {
                 (v) => setState(() => _phoneCalls = v),
               ),
             ),
-            const Divider(height: 1, color: AppColors.divider, indent: 20, endIndent: 20),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
             ProfileTile(
               title: 'Languages',
               trailingText: user?.preferredLanguage ?? 'English',
               onTap: () => _comingSoon('Languages'),
             ),
-            const Divider(height: 1, color: AppColors.divider, indent: 20, endIndent: 20),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
+            ),
             ProfileTile(
               title: 'Privacy Policy',
               onTap: () =>
                   Navigator.pushNamed(context, AppRoutes.privacyPolicy),
             ),
-            const Divider(height: 1, color: AppColors.divider, indent: 20, endIndent: 20),
-            ProfileTile(
-              title: 'Link social accounts',
-              trailingText: 'Facebook, Google',
-              onTap: () => _comingSoon('Link social accounts'),
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
             ),
-            const Divider(height: 1, color: AppColors.divider, indent: 20, endIndent: 20),
-            ProfileTile(
-              title: 'Log Out',
-              onTap: _logout,
+            const Divider(
+              height: 1,
+              color: AppColors.divider,
+              indent: 20,
+              endIndent: 20,
             ),
+            ProfileTile(title: 'Log Out', onTap: _logout),
 
             const SizedBox(height: 24),
           ],
