@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../widgets/home_action_cards.dart';
 import '../widgets/home_clinics_section.dart';
 import '../widgets/home_header.dart';
@@ -24,19 +22,16 @@ class _HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authState = context.watch<AuthBloc>().state;
-    final userName = authState is AuthAuthenticated ? authState.user.name : 'Guest';
-
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HomeHeader(userName: userName),
-          const HomeSearchBar(),
-          const HomeVideosSection(),
-          const HomeActionCards(),
-          const HomeClinicsSection(),
-          const SizedBox(height: 24),
+          HomeHeader(userName: 'Uwineza'),
+          HomeSearchBar(),
+          HomeVideosSection(),
+          HomeActionCards(),
+          HomeClinicsSection(),
+          SizedBox(height: 24),
         ],
       ),
     );
