@@ -6,7 +6,10 @@ import '../../../../core/errors/exceptions.dart';
 import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
-  Future<UserModel> loginWithEmail({required String email, required String password});
+  Future<UserModel> loginWithEmail({
+    required String email,
+    required String password,
+  });
 
   Future<UserModel> registerWithEmail({
     required String name,
@@ -18,6 +21,21 @@ abstract class AuthRemoteDataSource {
   Future<UserModel> signInWithGoogle();
 
   Future<void> logout();
+
+  Future<UserModel> updateProfile({
+    required String name,
+    String? mobile,
+    String? gender,
+    DateTime? dateOfBirth,
+    String? preferredLanguage,
+  });
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  });
+
+  Future<UserModel> linkGoogleAccount();
 
   Stream<UserModel?> get authStateChanges;
 }
@@ -37,7 +55,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       firestore.collection(FirestoreCollections.users);
 
   @override
-  Future<UserModel> loginWithEmail({required String email, required String password}) async {
+  Future<UserModel> loginWithEmail({
+    required String email,
+    required String password,
+  }) async {
     try {
       final credential = await firebaseAuth.signInWithEmailAndPassword(
         email: email,
@@ -80,14 +101,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> signInWithGoogle() async {
     try {
       final googleUser = await googleSignIn.signIn();
-      if (googleUser == null) throw const AuthException('Google sign-in cancelled.');
+      if (googleUser == null)
+        throw const AuthException('Google sign-in cancelled.');
 
       final googleAuth = await googleUser.authentication;
       final credential = fb_auth.GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      final userCredential = await firebaseAuth.signInWithCredential(credential);
+      final userCredential = await firebaseAuth.signInWithCredential(
+        credential,
+      );
       final uid = userCredential.user!.uid;
 
       final doc = await _usersRef.doc(uid).get();
@@ -115,6 +139,57 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
+  Future<UserModel> updateProfile({
+    required String name,
+    String? mobile,
+    String? gender,
+    DateTime? dateOfBirth,
+    String? preferredLanguage,
+  }) async {
+    final user = firebaseAuth.currentUser;
+    if (user == null) throw const AuthException('No signed-in user.');
+
+    final data = <String, dynamic>{'name': name};
+    if (mobile != null) data['mobile'] = mobile;
+    if (gender != null) data['gender'] = gender;
+    if (dateOfBirth != null)
+      data['dateOfBirth'] = Timestamp.fromDate(dateOfBirth);
+    if (preferredLanguage != null) data['preferredLanguage'] = preferredLanguage;
+
+    try {
+      await _usersRef.doc(user.uid).update(data);
+      final doc = await _usersRef.doc(user.uid).get();
+      return UserModel.fromMap(doc.data()!, doc.id);
+    } catch (_) {
+      throw const AuthException('Failed to update profile.');
+    }
+  }
+
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final user = firebaseAuth.currentUser;
+    if (user == null || user.email == null) {
+      throw const AuthException('No signed-in user.');
+    }
+
+    try {
+      final credential = fb_auth.EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPassword,
+      );
+      // Firebase requires a recent login before allowing a password change.
+      // Reauthenticating here is what satisfies that check.
+      await user.reauthenticateWithCredential(credential);
+      await user.updatePassword(newPassword);
+    } on fb_auth.FirebaseAuthException catch (e) {
+      throw AuthException(e.message ?? 'Failed to change password.');
+    }
+  }
+
+  @override
   Stream<UserModel?> get authStateChanges {
     return firebaseAuth.authStateChanges().asyncMap((user) async {
       if (user == null) return null;
@@ -122,5 +197,36 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (!doc.exists) return null;
       return UserModel.fromMap(doc.data()!, doc.id);
     });
+  }
+  
+  @override
+  Future<UserModel> linkGoogleAccount() async {
+    final user = firebaseAuth.currentUser;
+    if (user == null) throw const AuthException('No signed-in user.');
+
+    try {
+      final googleUser = await googleSignIn.signIn();
+      if (googleUser == null) {
+        throw const AuthException('Google sign-in cancelled.');
+      }
+
+      final googleAuth = await googleUser.authentication;
+      final credential = fb_auth.GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await user.linkWithCredential(credential);
+
+      final doc = await _usersRef.doc(user.uid).get();
+      return UserModel.fromMap(doc.data()!, doc.id);
+    } on fb_auth.FirebaseAuthException catch (e) {
+      if (e.code == 'credential-already-in-use') {
+        throw const AuthException(
+          'This Google account is already linked to another user.',
+        );
+      }
+      throw AuthException(e.message ?? 'Failed to link Google account.');
+    }
   }
 }
